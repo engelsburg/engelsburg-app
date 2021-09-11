@@ -1,6 +1,6 @@
-import 'package:engelsburg_app/constants/app_constants.dart';
-import 'package:engelsburg_app/provider/theme.dart';
-import 'package:engelsburg_app/widgets/color_grid.dart';
+import 'package:engelsburg_app/src/constants/app_constants.dart';
+import 'package:engelsburg_app/src/provider/theme.dart';
+import 'package:engelsburg_app/src/widgets/color_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

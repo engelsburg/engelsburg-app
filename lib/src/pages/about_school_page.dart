@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:engelsburg_app/constants/app_constants.dart';
-import 'package:engelsburg_app/constants/asset_path_constants.dart';
+import 'package:engelsburg_app/src/constants/app_constants.dart';
+import 'package:engelsburg_app/src/constants/asset_path_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

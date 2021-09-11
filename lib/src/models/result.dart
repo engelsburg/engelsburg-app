@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:engelsburg_app/constants/app_constants.dart';
+import 'package:engelsburg_app/src/constants/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 class Result {
-
   Result._of(this.result);
   Result._error(this.error);
   Result._empty();
@@ -27,35 +26,40 @@ class Result {
   factory Result.empty() => Result._empty();
   static final expectEmpty = Result.empty();
 
-  Widget handle<T>(
-      T Function(Map<String, dynamic>) parse,
-      Widget? Function(ApiError)? onError,
-      Widget Function(T) onSuccess
-      ) {
+  Widget handle<T>(T Function(Map<String, dynamic>) parse,
+      Widget? Function(ApiError)? onError, Widget Function(T) onSuccess) {
     Widget? ret;
-    if (errorPresent()) {//If error occurred
-      if (onError != null) ret = onError(error!);//Error which could be thrown
-      return ret ?? handleCommonError();//If error wasn't handled
+    if (errorPresent()) {
+      //If error occurred
+      if (onError != null) ret = onError(error!); //Error which could be thrown
+      return ret ?? handleCommonError(); //If error wasn't handled
     } else {
-      if (resultPresent() && T is! Result) {//If result present and valid parse function specified
-        return onSuccess(parse(result!));//Return Widget function onSuccess with parsed result
-      } else if (T is Result) {//Otherwise if empty result is expected
-        return onSuccess(expectEmpty as T);//Return onSuccess without parse
-      } else {//If nothing handled, try common errors
+      if (resultPresent() && T is! Result) {
+        //If result present and valid parse function specified
+        return onSuccess(parse(
+            result!)); //Return Widget function onSuccess with parsed result
+      } else if (T is Result) {
+        //Otherwise if empty result is expected
+        return onSuccess(expectEmpty as T); //Return onSuccess without parse
+      } else {
+        //If nothing handled, try common errors
         return handleCommonError();
       }
     }
   }
 
   Widget handleCommonError() {
-    if (errorPresent()) {//Handle errors
-      if (error!.status == 0) { //Custom status to handle fetching errors
+    if (errorPresent()) {
+      //Handle errors
+      if (error!.status == 0) {
+        //Custom status to handle fetching errors
         //TODO: no network connection, error fetching
       } else if (error!.status == 400) {
         if (error!.extra == 'token') {
-          if (error!.messageKey == 'EXPIRED')  {
+          if (error!.messageKey == 'EXPIRED') {
             //TODO: get new JWT
-          } else if (error!.messageKey == 'INVALID' || error!.messageKey == 'FAILED') {
+          } else if (error!.messageKey == 'INVALID' ||
+              error!.messageKey == 'FAILED') {
             //TODO: try to login again
           }
         }
@@ -72,11 +76,9 @@ class Result {
   Widget _handleUnexpectedError() {
     return ApiError.errorBox(AppConstants.unexpectedError);
   }
-
 }
 
 class ApiError {
-
   int status;
   String messageKey;
   String extra;
@@ -99,8 +101,7 @@ class ApiError {
   factory ApiError.fromJson(Map<String, dynamic> json) => ApiError(
       status: json['status'],
       messageKey: json['messageKey'],
-      extra: json['extra']
-  );
+      extra: json['extra']);
 
   factory ApiError.fromStatus(int status) => ApiError(status: status);
 
@@ -118,7 +119,8 @@ class ApiError {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Text(AppConstants.error.toUpperCase() + ':', textScaleFactor: 1.3),
+              Text(AppConstants.error.toUpperCase() + ':',
+                  textScaleFactor: 1.3),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(text),
@@ -138,5 +140,4 @@ class ApiError {
   bool isAlreadyExisting() {
     return status == 409 && messageKey == 'ALREADY_EXISTS';
   }
-
 }

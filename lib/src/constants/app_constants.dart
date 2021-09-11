@@ -1,9 +1,8 @@
-import 'package:engelsburg_app/pages/cateteria_page.dart';
-import 'package:engelsburg_app/pages/news_page.dart';
+import 'package:engelsburg_app/src/pages/cateteria_page.dart';
+import 'package:engelsburg_app/src/pages/news_page.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {
-  static const appName = 'Engelsburg-App';
   static const appDescription =
       'Eine App, die Informationen über das Engelsburg-Gymnasium übersichtlich zusammenstellt.\n\nEntwickelt von den Schülern Paul Huerkamp (Backend) und Dario Trombello (Frontend bzw. Android & iOS App)';
   static const events = 'Termine';

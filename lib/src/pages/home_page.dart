@@ -1,12 +1,14 @@
-import 'package:engelsburg_app/constants/app_constants.dart';
-import 'package:engelsburg_app/pages/about_page.dart';
-import 'package:engelsburg_app/pages/events_page.dart';
-import 'package:engelsburg_app/pages/register_page.dart';
-import 'package:engelsburg_app/pages/settings_page.dart';
-import 'package:engelsburg_app/pages/solar_panel_page.dart';
-import 'package:engelsburg_app/provider/auth.dart';
+import 'package:engelsburg_app/src/constants/app_constants.dart';
+import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+import 'about_page.dart';
+import 'events_page.dart';
+import 'register_page.dart';
+import 'settings_page.dart';
+import 'solar_panel_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,9 +39,9 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
           child: ListView(
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             margin: EdgeInsets.zero,
-            child: Text(AppConstants.appName),
+            child: Text(AppLocalizations.of(context)!.appTitle),
           ),
           Consumer<AuthModel>(
             builder: (context, auth, child) => auth.isLoggedIn
@@ -96,7 +98,7 @@ class _HomePageState extends State<HomePage> {
         ],
       )),
       appBar: AppBar(
-        title: const Text(AppConstants.appName),
+        title: Text(AppLocalizations.of(context)!.appTitle),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,

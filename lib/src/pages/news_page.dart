@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:engelsburg_app/models/engelsburg_api/articles.dart';
-import 'package:engelsburg_app/models/result.dart';
-import 'package:engelsburg_app/pages/post_detail_page.dart';
-import 'package:engelsburg_app/services/api_service.dart';
-import 'package:engelsburg_app/utils/html.dart';
-import 'package:engelsburg_app/utils/random_string.dart';
-import 'package:engelsburg_app/utils/time_ago.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
+import 'package:engelsburg_app/src/models/result.dart';
+import 'package:engelsburg_app/src/services/api_service.dart';
+import 'package:engelsburg_app/src/utils/html.dart';
+import 'package:engelsburg_app/src/utils/random_string.dart';
+import 'package:engelsburg_app/src/utils/time_ago.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:share_plus/share_plus.dart';
+
+import 'post_detail_page.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);

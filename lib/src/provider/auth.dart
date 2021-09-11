@@ -1,4 +1,4 @@
-import 'package:engelsburg_app/services/shared_prefs.dart';
+import 'package:engelsburg_app/src/services/shared_prefs.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthModel extends ChangeNotifier {
