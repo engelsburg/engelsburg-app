@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:engelsburg_app/constants/app_constants.dart';
-import 'package:engelsburg_app/constants/asset_path_constants.dart';
+import 'package:engelsburg_app/src/constants/app_constants.dart';
+import 'package:engelsburg_app/src/constants/asset_path_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -27,7 +28,7 @@ class _AboutSchoolPageState extends State<AboutSchoolPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.aboutTheSchool)),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.aboutTheSchool)),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
@@ -35,17 +36,18 @@ class _AboutSchoolPageState extends State<AboutSchoolPage> {
             borderRadius: BorderRadius.circular(4.0),
             child: Image.asset(AssetPaths.schoolImage),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 32.0, bottom: 8.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0, bottom: 8.0),
             child: Text(
-              AppConstants.info,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),
+              AppLocalizations.of(context)!.info,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),
             ),
           ),
-          const Text(AppConstants.schoolDescription),
+          Text(AppLocalizations.of(context)!.schoolDescription),
           RichText(
               text: TextSpan(
-                  text: AppConstants.source + ': ',
+                  text: AppLocalizations.of(context)!.source + ': ',
                   style: TextStyle(
                       color: Theme.of(context).textTheme.bodyText1!.color),
                   children: [
@@ -58,11 +60,12 @@ class _AboutSchoolPageState extends State<AboutSchoolPage> {
                             .launch(AppConstants.schoolDescriptionSourceUrl);
                       })
               ])),
-          const Padding(
-            padding: EdgeInsets.only(top: 32.0, bottom: 8.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0, bottom: 8.0),
             child: Text(
-              AppConstants.location,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),
+              AppLocalizations.of(context)!.location,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),
             ),
           ),
           ClipRRect(
@@ -81,9 +84,9 @@ class _AboutSchoolPageState extends State<AboutSchoolPage> {
                   Marker(
                     markerId: const MarkerId('0'),
                     position: _engelsburgPosition,
-                    infoWindow: const InfoWindow(
-                      title: AppConstants.schoolName,
-                      snippet: AppConstants.schoolAddress,
+                    infoWindow: InfoWindow(
+                      title: AppLocalizations.of(context)!.schoolName,
+                      snippet: AppLocalizations.of(context)!.schoolAddress,
                     ),
                   ),
                 },
@@ -95,17 +98,17 @@ class _AboutSchoolPageState extends State<AboutSchoolPage> {
           ),
           ListTile(
               leading: const Icon(Icons.phone),
-              title: const Text(AppConstants.callPforte),
+              title: Text(AppLocalizations.of(context)!.callPforte),
               onTap: () =>
                   url_launcher.launch('tel:' + AppConstants.pforteNumber)),
           ListTile(
               leading: const Icon(Icons.phone),
-              title: const Text(AppConstants.callSekretariat),
+              title: Text(AppLocalizations.of(context)!.callOffice),
               onTap: () =>
                   url_launcher.launch('tel:' + AppConstants.sekretariatNumber)),
           ListTile(
               leading: const Icon(Icons.mail),
-              title: const Text(AppConstants.emailToSekretariat),
+              title: Text(AppLocalizations.of(context)!.emailOffice),
               onTap: () => url_launcher
                   .launch('mailto:' + AppConstants.sekretariatEmail)),
         ],

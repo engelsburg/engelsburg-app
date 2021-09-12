@@ -1,13 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:engelsburg_app/models/engelsburg_api/articles.dart';
-import 'package:engelsburg_app/models/result.dart';
-import 'package:engelsburg_app/pages/post_detail_page.dart';
-import 'package:engelsburg_app/services/api_service.dart';
-import 'package:engelsburg_app/utils/html.dart';
-import 'package:engelsburg_app/utils/random_string.dart';
-import 'package:engelsburg_app/utils/time_ago.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
+import 'package:engelsburg_app/src/models/result.dart';
+import 'package:engelsburg_app/src/services/api_service.dart';
+import 'package:engelsburg_app/src/utils/html.dart';
+import 'package:engelsburg_app/src/utils/random_string.dart';
+import 'package:engelsburg_app/src/utils/time_ago.dart';
+import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
+import 'package:octo_image/octo_image.dart';
+import 'package:share_plus/share_plus.dart';
+
+import 'post_detail_page.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -28,23 +31,22 @@ class _NewsPageState extends State<NewsPage>
       future: ApiService.getArticles(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return snapshot.data!.handle<List<Article>>((json) => Articles.fromJson(json).articles,
-                  (error) {
-                    if (error.isNotFound()) {
-                      return ApiError.errorBox('Articles not found!');
-                    }
-                  },
-                  (articles) {
-                    return ListView.separated(
-                        itemBuilder: (context, index) {
-                          final article = articles[index];
-                          return _newsCard(article);
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Divider(height: 0);
-                        },
-                        itemCount: articles.length);
-                  });
+          return snapshot.data!.handle<List<Article>>(
+              (json) => Articles.fromJson(json).articles, (error) {
+            if (error.isNotFound) {
+              return const ErrorBox(text: 'Articles not found!');
+            }
+          }, (articles) {
+            return ListView.separated(
+                itemBuilder: (context, index) {
+                  final article = articles[index];
+                  return _newsCard(article);
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(height: 0);
+                },
+                itemCount: articles.length);
+          });
         }
         return const Center(
           child: CircularProgressIndicator(),
@@ -78,10 +80,17 @@ class _NewsPageState extends State<NewsPage>
                       tag: heroTagFeaturedMedia,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: CachedNetworkImage(
-                            height: 200,
-                            fit: BoxFit.cover,
-                            imageUrl: article.mediaUrl as String),
+                        child: OctoImage(
+                          image: CachedNetworkImageProvider(
+                              article.mediaUrl as String),
+                          placeholderBuilder: article.blurHash != null
+                              ? OctoPlaceholder.blurHash(
+                                  article.blurHash as String,
+                                )
+                              : null,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),

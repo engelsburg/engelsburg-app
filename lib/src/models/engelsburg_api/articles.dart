@@ -24,6 +24,7 @@ class Article {
     this.title,
     this.content,
     this.mediaUrl,
+    this.blurHash,
   });
 
   final int? date;
@@ -31,6 +32,7 @@ class Article {
   final String? title;
   final String? content;
   final String? mediaUrl;
+  final String? blurHash;
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
         date: json["date"],
@@ -38,6 +40,7 @@ class Article {
         title: json["title"],
         content: json["content"],
         mediaUrl: json["mediaUrl"],
+        blurHash: json['blurHash'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,5 +49,6 @@ class Article {
         "title": title,
         "content": content,
         "mediaUrl": mediaUrl,
+        "blurHash": blurHash,
       };
 }

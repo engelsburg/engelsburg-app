@@ -1,4 +1,4 @@
-import 'package:engelsburg_app/services/shared_prefs.dart';
+import 'package:engelsburg_app/src/services/shared_prefs.dart';
 import 'package:flutter/material.dart';
 
 class ThemeChanger extends ChangeNotifier {

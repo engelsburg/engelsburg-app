@@ -1,0 +1,168 @@
+{
+  "appTitle": "Engelsburg-App",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "appDescription": "An app that displays information about Engelsburg High School.\n\nDeveloped by students Paul Huerkamp (backend) and Dario Trombello (frontend/Android & iOS app).",
+  "@appDescription": {
+    "description": "The description of the app, shown on the about page"
+  },
+  "events": "Events",
+  "@events": {
+    "description": "The title of the events page"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "The title of the settings page"
+  },
+  "about": "About",
+  "@about": {
+    "description": "The title of the about page"
+  },
+  "openInBrowser": "Open in browser",
+  "@openInBrowser": {
+    "description": "A tooltip message on the PostDetailPage"
+  },
+  "share": "Share",
+  "@share": {
+    "description": "A tooltip message on the PostDetailPage"
+  },
+  "info": "Info",
+  "@info": {
+    "description": "Used on the AboutSchoolPage"
+  },
+  "location": "Location",
+  "@location": {
+    "description": "Used on the AboutSchoolPage as a title above the Google Map"
+  },
+  "schoolName": "Engelsburg-Gymnasium",
+  "@schoolName": {
+    "description": "Used on the AboutSchoolPage for a marker on the Google Map"
+  },
+  "schoolAddress": "Richardweg 3, 34117 Kassel",
+  "@schoolAddress": {
+    "description": "Used on the AboutSchoolPage for a marker on the Google Map"
+  },
+  "aboutTheSchool": "About the school",
+  "@aboutTheSchool": {
+    "description": "The title of the about school page"
+  },
+  "schoolDescription": "Engelsburg-Gymnasium is a state-approved Catholic high school run by the Order of the Sisters of St. Marie-Madeleine Postel (SMMP). It has been awarded the seal of approval \"Hochbegabtenförderung\" by the state of Hesse. At the school, the G8 and G9 school forms are taught in parallel.\n(Translated from German)",
+  "@schoolDescription": {
+    "description": "The school description on the about school page"
+  },
+  "callPforte": "Call Pforte",
+  "@callPforte": {
+    "description": "The title of a button on the about school page"
+  },
+  "callOffice": "Call the office",
+  "@callOffice": {
+    "description": "The title of a button on the about school page"
+  },
+  "emailOffice": "Email the office",
+  "@emailOffice": {
+    "description": "The title of a button on the about school page"
+  },
+  "colorScheme": "Color scheme",
+  "@colorScheme": {
+    "description": "The title of a button on the settings page"
+  },
+  "systemSetting": "Systemeinstellung",
+  "@systemSetting": {
+    "description": "The title of a radio button on the settings page"
+  },
+  "dark": "Dark",
+  "@dark": {
+    "description": "The title of a radio button on the settings page"
+  },
+  "light": "Light",
+  "@light": {
+    "description": "The title of a radio button on the settings page"
+  },
+  "primaryColor": "Primary color",
+  "@primaryColor": {
+    "description": "The title of a button on the settings page"
+  },
+  "selectPrimaryColor": "Select primary color",
+  "@selectPrimaryColor": {
+    "description": "Title of the color picker dialog in the settings"
+  },
+  "tapHereToChangePrimaryColor": "Tap here to change primary color",
+  "@tapHereToChangePrimaryColor": {
+    "description": "Subtitle of a button on the settings page"
+  },
+  "secondaryColor": "Secondary color",
+  "@secondaryColor": {
+    "description": "The title of a button on the settings page"
+  },
+  "selectSecondaryColor": "Select secondary color",
+  "@selectSecondaryColor": {
+    "description": "Title of the color picker dialog in the settings"
+  },
+  "tapHereToChangeSecondaryColor": "Tap here to change secondary color",
+  "@tapHereToChangeSecondaryColor": {
+    "description": "Subtitle of a button on the settings page"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic title of a button that cancels the current process"
+  },
+  "reset": "Reset",
+  "@reset": {
+    "description": "Generic title of a button that resets a saved value"
+  },
+  "loadingAppName": "Loading app name...",
+  "@loadingAppName": {
+    "description": "Placeholder on the about page for the app name until it finishes loading"
+  },
+  "loadingAppVersion": "Loading app version...",
+  "@loadingAppVersion": {
+    "description": "Placeholder on the about page for the app version until it finishes loading"
+  },
+  "sourceCodeOnGitHub": "Source code on GitHub",
+  "@sourceCodeOnGitHub": {
+    "description": "The title of a button on the about page that redirects the user to this app's GitHub repository"
+  },
+  "rateApp": "Rate the app",
+  "@rateApp": {
+    "description": "The title of a button on the about page that takes the user to the App Store/Play Store to review this app."
+  },
+  "sendDarioAnEmail": "Send Dario an email",
+  "@sendDarioAnEmail": {
+    "description": "The title of a button on the about page that opens the email client"
+  },
+  "openSourceLicenses": "Open source licenses",
+  "@openSourceLicenses": {
+    "description": "The title of a button on the about page that opens a view with all the licenses of the packages used in this app"
+  },
+  "source": "Source",
+  "@source": {
+    "description": "Used on AboutSchoolPage"
+  },
+  "solarPanelData": "Solar panel data",
+  "@solarPanelData": {
+    "description": "Title of the solar panel page"
+  },
+  "unexpectedErrorMessage": "An unexpected error occurred. Please try again a little later.",
+  "@unexpectedErrorMessage": {
+    "description": "Used for the error widget"
+  },
+  "error": "Fehler",
+  "@error": {},
+  "date": "Date",
+  "@date": {
+    "description": "Used on the solar panel data page"
+  },
+  "energy": "Energy",
+  "@energy": {
+    "description": "Used on the solar panel data page"
+  },
+  "avoidedCO2": "Avoided CO\u2082",
+  "@avoidedCO2": {
+    "description": "Used on the solar panel data page"
+  },
+  "renumeration": "Renumeration",
+  "@renumeration": {
+    "description": "Used on the solar panel data page"
+  }
+}

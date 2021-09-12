@@ -1,9 +1,14 @@
-import 'package:engelsburg_app/constants/app_constants.dart';
-import 'package:engelsburg_app/pages/about_page.dart';
-import 'package:engelsburg_app/pages/events_page.dart';
-import 'package:engelsburg_app/pages/settings_page.dart';
-import 'package:engelsburg_app/pages/solar_panel_page.dart';
+import 'package:engelsburg_app/src/constants/app_constants.dart';
+import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'about_page.dart';
+import 'events_page.dart';
+import 'register_page.dart';
+import 'settings_page.dart';
+import 'solar_panel_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -34,13 +39,32 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
           child: ListView(
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             margin: EdgeInsets.zero,
-            child: Text(AppConstants.appName),
+            child: Text(AppLocalizations.of(context)!.appTitle),
+          ),
+          Consumer<AuthModel>(
+            builder: (context, auth, child) => auth.isLoggedIn
+                ? Container()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()));
+                            },
+                            child: const Text('Anmelden')),
+                      ),
+                      const Divider(height: 0),
+                    ],
+                  ),
           ),
           ListTile(
             leading: const Icon(Icons.wb_sunny),
-            title: const Text(AppConstants.dataOfSolarPanel),
+            title: Text(AppLocalizations.of(context)!.solarPanelData),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const SolarPanelPage()));
@@ -48,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.watch_later),
-            title: const Text(AppConstants.events),
+            title: Text(AppLocalizations.of(context)!.events),
             onTap: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => EventsPage()));
@@ -57,7 +81,7 @@ class _HomePageState extends State<HomePage> {
           const Divider(height: 0),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text(AppConstants.settings),
+            title: Text(AppLocalizations.of(context)!.settings),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const SettingsPage()));
@@ -65,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text(AppConstants.about),
+            title: Text(AppLocalizations.of(context)!.about),
             onTap: () {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AboutPage()));
@@ -74,7 +98,7 @@ class _HomePageState extends State<HomePage> {
         ],
       )),
       appBar: AppBar(
-        title: const Text(AppConstants.appName),
+        title: Text(AppLocalizations.of(context)!.appTitle),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,
