@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:engelsburg_app/src/constants/app_constants.dart';
+import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -70,25 +70,21 @@ class Result {
       }
     }
 
-    return _handleUnexpectedError();
-  }
-
-  Widget _handleUnexpectedError() {
-    return ApiError.errorBox(AppConstants.unexpectedError);
+    return const ErrorBox();
   }
 }
 
 class ApiError {
-  int status;
-  String messageKey;
-  String extra;
+  final int status;
+  final String? messageKey;
+  final String? extra;
 
-  ApiError({required this.status, this.messageKey = '', this.extra = ''});
+  ApiError({required this.status, this.messageKey, this.extra});
 
   factory ApiError.tryDecode(Response response) {
     try {
       if (response.body.isNotEmpty) {
-        Map<String, dynamic> json = jsonDecode(response.body);
+        final Map<String, dynamic> json = jsonDecode(response.body);
         if (json.containsKey("status")) {
           return ApiError.fromJson(json);
         }
@@ -105,39 +101,6 @@ class ApiError {
 
   factory ApiError.fromStatus(int status) => ApiError(status: status);
 
-  static Widget errorBox(String text) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(64, 255, 125, 125),
-            border: Border.all(color: const Color.fromARGB(125, 255, 0, 0)),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Text(AppConstants.error.toUpperCase() + ':',
-                  textScaleFactor: 1.3),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(text),
-              )
-            ],
-            mainAxisSize: MainAxisSize.min,
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool isNotFound() {
-    return status == 404 && messageKey == 'NOT_FOUND';
-  }
-
-  bool isAlreadyExisting() {
-    return status == 409 && messageKey == 'ALREADY_EXISTS';
-  }
+  bool get isNotFound => status == 404 && messageKey == 'NOT_FOUND';
+  bool get isAlreadyExisting => status == 409 && messageKey == 'ALREADY_EXISTS';
 }

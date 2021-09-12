@@ -5,6 +5,7 @@ import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:engelsburg_app/src/utils/random_string.dart';
 import 'package:engelsburg_app/src/utils/time_ago.dart';
+import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,8 +33,8 @@ class _NewsPageState extends State<NewsPage>
         if (snapshot.hasData) {
           return snapshot.data!.handle<List<Article>>(
               (json) => Articles.fromJson(json).articles, (error) {
-            if (error.isNotFound()) {
-              return ApiError.errorBox('Articles not found!');
+            if (error.isNotFound) {
+              return const ErrorBox(text: 'Articles not found!');
             }
           }, (articles) {
             return ListView.separated(

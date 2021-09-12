@@ -1,7 +1,7 @@
-import 'package:engelsburg_app/src/constants/app_constants.dart';
 import 'package:engelsburg_app/src/provider/theme.dart';
 import 'package:engelsburg_app/src/widgets/color_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -17,26 +17,26 @@ class _SettingsPageState extends State<SettingsPage> {
     final themeChanger = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.settings)),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: ListView(
         children: [
           ExpansionTile(
-            title: const Text(AppConstants.colorScheme),
+            title: Text(AppLocalizations.of(context)!.colorScheme),
             children: [
               RadioListTile<ThemeMode>(
-                title: const Text(AppConstants.systemSetting),
+                title: Text(AppLocalizations.of(context)!.systemSetting),
                 value: ThemeMode.system,
                 groupValue: themeChanger.themeMode,
                 onChanged: (themeMode) => themeChanger.clearDarkModeSetting(),
               ),
               RadioListTile<ThemeMode>(
-                title: const Text(AppConstants.dark),
+                title: Text(AppLocalizations.of(context)!.dark),
                 value: ThemeMode.dark,
                 groupValue: themeChanger.themeMode,
                 onChanged: (themeMode) => themeChanger.enableDarkMode(),
               ),
               RadioListTile<ThemeMode>(
-                title: const Text(AppConstants.light),
+                title: Text(AppLocalizations.of(context)!.light),
                 value: ThemeMode.light,
                 groupValue: themeChanger.themeMode,
                 onChanged: (themeMode) => themeChanger.disableDarkMode(),
@@ -46,13 +46,14 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             leading: CircleAvatar(
                 backgroundColor: themeChanger.primaryColor, maxRadius: 16.0),
-            title: const Text(AppConstants.primaryColor),
-            subtitle: const Text(AppConstants.tapHereToChangePrimaryColor),
+            title: Text(AppLocalizations.of(context)!.primaryColor),
+            subtitle:
+                Text(AppLocalizations.of(context)!.tapHereToChangePrimaryColor),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text(AppConstants.selectPrimaryColor),
+                  title: Text(AppLocalizations.of(context)!.selectPrimaryColor),
                   content: SizedBox(
                     width: 300,
                     child: ColorGrid(
@@ -68,14 +69,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(AppConstants.cancel),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     TextButton(
                       onPressed: () {
                         themeChanger.clearPrimaryColor();
                         Navigator.of(context).pop();
                       },
-                      child: const Text(AppConstants.reset),
+                      child: Text(AppLocalizations.of(context)!.reset),
                     ),
                   ],
                 ),
@@ -85,13 +86,15 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             leading: CircleAvatar(
                 backgroundColor: themeChanger.secondaryColor, maxRadius: 16.0),
-            title: const Text(AppConstants.secondaryColor),
-            subtitle: const Text(AppConstants.tapHereToChangeSecondaryColor),
+            title: Text(AppLocalizations.of(context)!.secondaryColor),
+            subtitle: Text(
+                AppLocalizations.of(context)!.tapHereToChangeSecondaryColor),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text(AppConstants.selectSecondaryColor),
+                  title:
+                      Text(AppLocalizations.of(context)!.selectSecondaryColor),
                   content: SizedBox(
                     width: 300,
                     child: ColorGrid(
@@ -107,14 +110,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(AppConstants.cancel),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     TextButton(
                       onPressed: () {
                         themeChanger.clearSecondaryColor();
                         Navigator.of(context).pop();
                       },
-                      child: const Text(AppConstants.reset),
+                      child: Text(AppLocalizations.of(context)!.reset),
                     ),
                   ],
                 ),

@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:engelsburg_app/src/constants/app_constants.dart';
 import 'package:engelsburg_app/src/constants/asset_path_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -14,7 +15,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.about)),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.about)),
       body: FutureBuilder<PackageInfo>(
           future: PackageInfo.fromPlatform(),
           builder: (context, snapshot) {
@@ -24,37 +25,39 @@ class AboutPage extends StatelessWidget {
                 ListTile(
                   leading: Image.asset(AssetPaths.appLogo),
                   title: Text(
-                    packageInfo?.appName ?? AppConstants.loadingAppName,
+                    packageInfo?.appName ??
+                        AppLocalizations.of(context)!.loadingAppName,
                   ),
                   subtitle: Text(
-                    packageInfo?.version ?? AppConstants.loadingAppVersion,
+                    packageInfo?.version ??
+                        AppLocalizations.of(context)!.loadingAppVersion,
                   ),
                 ),
-                const ListTile(
-                  title: Text(AppConstants.appDescription),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.appDescription),
                 ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.star_half),
-                  title: const Text(AppConstants.rateApp),
+                  title: Text(AppLocalizations.of(context)!.rateApp),
                   onTap: () => url_launcher.launch(Platform.isIOS
                       ? AppConstants.appStoreUrl
                       : AppConstants.playStoreUrl),
                 ),
                 ListTile(
                   leading: const Icon(Icons.code),
-                  title: const Text(AppConstants.sourceCodeOnGitHub),
+                  title: Text(AppLocalizations.of(context)!.sourceCodeOnGitHub),
                   onTap: () => url_launcher.launch(AppConstants.githubUrl),
                 ),
                 ListTile(
                   leading: const Icon(Icons.mail),
-                  title: const Text(AppConstants.sendDarioAnEmail),
+                  title: Text(AppLocalizations.of(context)!.sendDarioAnEmail),
                   onTap: () =>
                       url_launcher.launch('mailto:' + AppConstants.darioEmail),
                 ),
                 ListTile(
                   leading: const Icon(Icons.info),
-                  title: const Text(AppConstants.openSourceLicenses),
+                  title: Text(AppLocalizations.of(context)!.openSourceLicenses),
                   onTap: () => showLicensePage(
                     applicationIcon: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -71,7 +74,7 @@ class AboutPage extends StatelessWidget {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.school),
-                  title: const Text(AppConstants.aboutTheSchool),
+                  title: Text(AppLocalizations.of(context)!.aboutTheSchool),
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.wb_sunny),
-            title: const Text(AppConstants.dataOfSolarPanel),
+            title: Text(AppLocalizations.of(context)!.solarPanelData),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const SolarPanelPage()));
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.watch_later),
-            title: const Text(AppConstants.events),
+            title: Text(AppLocalizations.of(context)!.events),
             onTap: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => EventsPage()));
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
           const Divider(height: 0),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text(AppConstants.settings),
+            title: Text(AppLocalizations.of(context)!.settings),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const SettingsPage()));
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text(AppConstants.about),
+            title: Text(AppLocalizations.of(context)!.about),
             onTap: () {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AboutPage()));

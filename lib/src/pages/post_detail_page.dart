@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:engelsburg_app/src/constants/app_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -29,13 +29,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
         actions: [
           if (widget.article.link != null)
             IconButton(
-                tooltip: AppConstants.openInBrowser,
+                tooltip: AppLocalizations.of(context)!.openInBrowser,
                 onPressed: () =>
                     url_launcher.launch(widget.article.link as String),
                 icon: const Icon(Icons.open_in_new)),
           if (widget.article.link != null)
             IconButton(
-              tooltip: AppConstants.share,
+              tooltip: AppLocalizations.of(context)!.share,
               onPressed: () {
                 Share.share(widget.article.link as String);
               },

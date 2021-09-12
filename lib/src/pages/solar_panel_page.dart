@@ -1,7 +1,9 @@
 import 'package:engelsburg_app/src/models/engelsburg_api/solar_panel.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
+import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class SolarPanelPage extends StatefulWidget {
@@ -17,7 +19,7 @@ class _SolarPanelPageState extends State<SolarPanelPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Daten der Solaranlage'),
+        title: Text(AppLocalizations.of(context)!.solarPanelData),
       ),
       body: FutureBuilder<Result>(
         future: ApiService.getSolarSystemData(),
@@ -25,21 +27,27 @@ class _SolarPanelPageState extends State<SolarPanelPage> {
           if (snapshot.hasData) {
             return snapshot.data!.handle<SolarPanel>(
                 (json) => SolarPanel.fromJson(json), (error) {
-              if (error.isNotFound()) {
-                return ApiError.errorBox('Solar panel page not found!');
+              if (error.isNotFound) {
+                return const ErrorBox(text: 'Solar panel page not found!');
               }
             }, (solarPanelData) {
               final _iconBoxes = [
-                _iconBox(const Icon(Icons.calendar_today, size: 56), 'Datum',
+                _iconBox(
+                    const Icon(Icons.calendar_today, size: 56),
+                    AppLocalizations.of(context)!.date,
                     (solarPanelData.date).toString()),
-                _iconBox(const Icon(Icons.lightbulb_outline, size: 56),
-                    'Energie', (solarPanelData.energy).toString()),
+                _iconBox(
+                    const Icon(Icons.lightbulb_outline, size: 56),
+                    AppLocalizations.of(context)!.energy,
+                    (solarPanelData.energy).toString()),
                 _iconBox(
                     const Icon(Icons.landscape, size: 56),
-                    'Vermiedenes CO2',
+                    AppLocalizations.of(context)!.avoidedCO2,
                     (solarPanelData.co2Avoidance).toString()),
-                _iconBox(const Icon(Icons.monetization_on, size: 56),
-                    'Vergütung', (solarPanelData.payment).toString() + '€'),
+                _iconBox(
+                    const Icon(Icons.monetization_on, size: 56),
+                    AppLocalizations.of(context)!.renumeration,
+                    (solarPanelData.payment).toString() + '€'),
               ];
 
               return ListView(
