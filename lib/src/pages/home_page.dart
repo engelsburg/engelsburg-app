@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.all(16.0),
                         child: ElevatedButton(
                             onPressed: () {
+                              Navigator.pop(context);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const RegisterPage()));
                             },

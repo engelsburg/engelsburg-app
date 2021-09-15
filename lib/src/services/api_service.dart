@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:engelsburg_app/src/constants/api_constants.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:http/http.dart' as http;
 
@@ -120,6 +121,15 @@ class ApiService {
         uri: uri,
         method: HttpMethod.get,
         cacheKey: 'solar_system_json',
+        headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
+  }
+
+  static Future<Result> signUp(SignUpRequestDTO dto) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSignUp);
+    return await request(
+        uri: uri,
+        method: HttpMethod.post,
+        body: dto,
         headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
   }
 }
