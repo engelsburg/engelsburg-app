@@ -31,22 +31,26 @@ class _NewsPageState extends State<NewsPage>
       future: ApiService.getArticles(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return snapshot.data!.handle<List<Article>>(
-              (json) => Articles.fromJson(json).articles, (error) {
-            if (error.isNotFound) {
-              return const ErrorBox(text: 'Articles not found!');
-            }
-          }, (articles) {
-            return ListView.separated(
-                itemBuilder: (context, index) {
-                  final article = articles[index];
-                  return _newsCard(article);
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider(height: 0);
-                },
-                itemCount: articles.length);
-          });
+          return snapshot.data!.build<List<Article>>(
+            context,
+            parse: (json) => Articles.fromJson(json).articles,
+            onSuccess: (articles) {
+              return ListView.separated(
+                  itemBuilder: (context, index) {
+                    final article = articles[index];
+                    return _newsCard(article);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(height: 0);
+                  },
+                  itemCount: articles.length);
+            },
+            onError: (error) {
+              if (error.isNotFound) {
+                return const ErrorBox(text: 'Articles not found!');
+              }
+            },
+          );
         }
         return const Center(
           child: CircularProgressIndicator(),

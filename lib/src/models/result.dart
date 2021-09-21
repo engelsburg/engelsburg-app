@@ -7,7 +7,9 @@ import 'package:http/http.dart';
 
 class Result {
   Result._of(this.result);
+
   Result._error(this.error);
+
   Result._empty();
 
   Map<String, dynamic>? result;
@@ -22,40 +24,83 @@ class Result {
   }
 
   factory Result.of(Map<String, dynamic> result) => Result._of(result);
-  factory Result.error(ApiError apiError) => Result._error(apiError);
-  factory Result.empty() => Result._empty();
-  static final expectEmpty = Result.empty();
 
-  Widget handle<T>(T Function(Map<String, dynamic>) parse,
-      Widget? Function(ApiError)? onError, Widget Function(T) onSuccess) {
-    Widget? ret;
-    if (errorPresent()) {
+  factory Result.error(ApiError apiError) => Result._error(apiError);
+
+  factory Result.empty() => Result._empty();
+
+  static keepJson(Map<String, dynamic> json) => json;
+
+  void handle<T>(BuildContext context,
+      {T Function(Map<String, dynamic>)? parse,
+      void Function(T?)? onSuccess,
+      void Function(ApiError)? onError}) {
+    if (errorPresent() && onError != null) {
       //If error occurred
-      if (onError != null) ret = onError(error!); //Error which could be thrown
-      return ret ?? handleCommonError(); //If error wasn't handled
-    } else {
-      if (resultPresent() && T is! Result) {
+      onError(error!);
+      _handleCommonError(context);
+    } else if (onSuccess != null) {
+      if (resultPresent() && parse != null) {
         //If result present and valid parse function specified
-        return onSuccess(parse(
-            result!)); //Return Widget function onSuccess with parsed result
-      } else if (T is Result) {
-        //Otherwise if empty result is expected
-        return onSuccess(expectEmpty as T); //Return onSuccess without parse
+        onSuccess(parse(result!));
       } else {
-        //If nothing handled, try common errors
-        return handleCommonError();
+        //Empty result or no parse function
+        onSuccess(null);
       }
     }
   }
 
-  Widget handleCommonError() {
+  void _handleCommonError(BuildContext context) {
     if (errorPresent()) {
       //Handle errors
       if (error!.status == 0) {
         //Custom status to handle fetching errors
         //TODO: no network connection, error fetching
       } else if (error!.status == 400) {
-        if (error!.extra == 'token') {
+        if (error!.extra.contains('token')) {
+          if (error!.messageKey == 'EXPIRED') {
+            //TODO: get new JWT
+          } else if (error!.messageKey == 'INVALID' ||
+              error!.messageKey == 'FAILED') {
+            //TODO: try to login again
+          }
+        }
+      } else if (error!.status == 401) {
+        //TODO: need to be logged in
+      } else if (error!.status == 403) {
+        //TODO: don't permitted
+      }
+    }
+  }
+
+  Widget build<T>(BuildContext context,
+      {T Function(Map<String, dynamic>)? parse,
+      required Widget Function(T) onSuccess,
+      Widget? Function(ApiError)? onError}) {
+    Widget? ret;
+    if (errorPresent()) {
+      //If error occurred
+      if (onError != null) ret = onError(error!);
+      return ret ?? _buildCommonError(context); //If error wasn't handled
+    } else {
+      if (resultPresent() && parse != null) {
+        //If result present and valid parse function specified
+        return onSuccess(parse(result!));
+      } else {
+        //Empty result or no parse function
+        return const ErrorBox();
+      }
+    }
+  }
+
+  Widget _buildCommonError(BuildContext context) {
+    if (errorPresent()) {
+      //Handle errors
+      if (error!.status == 0) {
+        //Custom status to handle fetching errors
+        //TODO: no network connection, error fetching
+      } else if (error!.status == 400) {
+        if (error!.extra.contains('token')) {
           if (error!.messageKey == 'EXPIRED') {
             //TODO: get new JWT
           } else if (error!.messageKey == 'INVALID' ||
@@ -76,10 +121,10 @@ class Result {
 
 class ApiError {
   final int status;
-  final String? messageKey;
-  final String? extra;
+  final String messageKey;
+  final String extra;
 
-  ApiError({required this.status, this.messageKey, this.extra});
+  ApiError({required this.status, this.messageKey = '', this.extra = ''});
 
   factory ApiError.tryDecode(Response response) {
     try {
@@ -102,5 +147,6 @@ class ApiError {
   factory ApiError.fromStatus(int status) => ApiError(status: status);
 
   bool get isNotFound => status == 404 && messageKey == 'NOT_FOUND';
+
   bool get isAlreadyExisting => status == 409 && messageKey == 'ALREADY_EXISTS';
 }

@@ -25,67 +25,71 @@ class _SolarPanelPageState extends State<SolarPanelPage> {
         future: ApiService.getSolarSystemData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return snapshot.data!.handle<SolarPanel>(
-                (json) => SolarPanel.fromJson(json), (error) {
-              if (error.isNotFound) {
-                return const ErrorBox(text: 'Solar panel page not found!');
-              }
-            }, (solarPanelData) {
-              final _iconBoxes = [
-                _iconBox(
-                    const Icon(Icons.calendar_today, size: 56),
-                    AppLocalizations.of(context)!.date,
-                    (solarPanelData.date).toString()),
-                _iconBox(
-                    const Icon(Icons.lightbulb_outline, size: 56),
-                    AppLocalizations.of(context)!.energy,
-                    (solarPanelData.energy).toString()),
-                _iconBox(
-                    const Icon(Icons.landscape, size: 56),
-                    AppLocalizations.of(context)!.avoidedCO2,
-                    (solarPanelData.co2Avoidance).toString()),
-                _iconBox(
-                    const Icon(Icons.monetization_on, size: 56),
-                    AppLocalizations.of(context)!.renumeration,
-                    (solarPanelData.payment).toString() + '€'),
-              ];
+            return snapshot.data!.build<SolarPanel>(
+              context,
+              parse: (json) => SolarPanel.fromJson(json),
+              onSuccess: (solarPanelData) {
+                final _iconBoxes = [
+                  _iconBox(
+                      const Icon(Icons.calendar_today, size: 56),
+                      AppLocalizations.of(context)!.date,
+                      (solarPanelData.date).toString()),
+                  _iconBox(
+                      const Icon(Icons.lightbulb_outline, size: 56),
+                      AppLocalizations.of(context)!.energy,
+                      (solarPanelData.energy).toString()),
+                  _iconBox(
+                      const Icon(Icons.landscape, size: 56),
+                      AppLocalizations.of(context)!.avoidedCO2,
+                      (solarPanelData.co2Avoidance).toString()),
+                  _iconBox(
+                      const Icon(Icons.monetization_on, size: 56),
+                      AppLocalizations.of(context)!.renumeration,
+                      (solarPanelData.payment).toString() + '€'),
+                ];
 
-              return ListView(
-                padding: const EdgeInsets.all(16.0),
-                children: <Widget>[
-                  Card(
-                    margin: EdgeInsets.zero,
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      if (constraints.maxWidth > 400) {
-                        return Padding(
+                return ListView(
+                  padding: const EdgeInsets.all(16.0),
+                  children: <Widget>[
+                    Card(
+                      margin: EdgeInsets.zero,
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        if (constraints.maxWidth > 400) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: _iconBoxes,
+                            ),
+                          );
+                        }
+                        return GridView.count(
                           padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: _iconBoxes,
-                          ),
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 4.0,
+                          mainAxisSpacing: 4.0,
+                          children: _iconBoxes,
                         );
-                      }
-                      return GridView.count(
-                        padding: const EdgeInsets.all(16.0),
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 4.0,
-                        mainAxisSpacing: 4.0,
-                        children: _iconBoxes,
-                      );
-                    }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 32.0),
-                    child: HtmlWidget(
-                      (solarPanelData.text).toString(),
-                      textStyle: const TextStyle(height: 1.5, fontSize: 18.0),
+                      }),
                     ),
-                  )
-                ],
-              );
-            });
+                    Padding(
+                      padding: const EdgeInsets.only(top: 32.0),
+                      child: HtmlWidget(
+                        (solarPanelData.text).toString(),
+                        textStyle: const TextStyle(height: 1.5, fontSize: 18.0),
+                      ),
+                    )
+                  ],
+                );
+              },
+              onError: (error) {
+                if (error.isNotFound) {
+                  return const ErrorBox(text: 'Solar panel page not found!');
+                }
+              },
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },
