@@ -143,12 +143,6 @@
   "@solarPanelData": {
     "description": "Title of the solar panel page"
   },
-  "unexpectedErrorMessage": "An unexpected error occurred. Please try again a little later.",
-  "@unexpectedErrorMessage": {
-    "description": "Used for the error widget"
-  },
-  "error": "Fehler",
-  "@error": {},
   "date": "Date",
   "@date": {
     "description": "Used on the solar panel data page"
@@ -164,5 +158,77 @@
   "renumeration": "Renumeration",
   "@renumeration": {
     "description": "Used on the solar panel data page"
+  },
+  "singIn": "Sign in",
+  "@signIn": {
+    "description": "Used on drawer to login"
+  },
+  "register": "Register",
+  "@register": {
+    "description": "Register"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password"
+  },
+  "emailPassword": "Email and password",
+  "@emailPassword": {
+    "description": "Email and password"
+  },
+  "dataDisclaimer": "Your data is securely stored on our server in Kassel. The password is encrypted in such a way that it cannot be read by anyone.",
+  "@dataDisclaimer": {
+    "description": "Data disclaimer"
+  },
+  "substitutesPassword": "Password of substitutes",
+  "@substitutesPassword": {
+    "description": "Password to view substitutes"
+  },
+  "verifyUserIsStudent": "We have to verify that you are a student at the Engelsburg!",
+  "@verifyUserIsStudent": {
+    "description": "Verify user is Engelsburg student"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Generic error"
+  },
+  "cafeteriaPageNotFoundError": "Cafeteria page not found!",
+  "@cafeteriaPageNotFoundError": {
+    "description": "Cafeteria page not found"
+  },
+  "eventsNotFoundError": "Events not found!",
+  "@eventsNotFoundError": {
+    "description": "Events not found"
+  },
+  "articlesNotFoundError": "Articles not found!",
+  "@articlesNotFoundError": {
+    "description": "Articles not found"
+  },
+  "solarPanelPageNotFoundError": "Solar panel page not found!",
+  "@solarPanelPageNotFoundError": {
+    "description": "Solar panel page not found"
+  },
+  "unexpectedErrorMessage": "An unexpected error occurred. Please try again a little bit later.",
+  "@unexpectedErrorMessage": {
+    "description": "Used for the error widget"
+  },
+  "wrongSubstituteKeyError": "Wrong password for the substitutes!",
+  "@wrongSubstituteKeyError": {
+    "description": "Wrong password for substitutes used"
+  },
+  "invalidEmailError": "Please use a valid email!",
+  "@invalidEmailError": {
+    "description": "Invalid email used on sign up"
+  },
+  "accountAlreadyExistingError": "An account using this email already exists!",
+  "@accountAlreadyExistingError": {
+    "description": "Email already used on sign up"
+  },
+  "fieldCantBeEmptyError": "This field can't be empty",
+  "@fieldCantBeEmptyError": {
+    "description": "A form field can't be empty"
+  },
+  "loggedIn": "Logged in successfully!",
+  "@loggedIn": {
+    "description": "Message on successful login"
   }
 }

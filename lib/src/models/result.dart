@@ -146,6 +146,7 @@ class ApiError {
 
   factory ApiError.fromStatus(int status) => ApiError(status: status);
 
+  bool get isInvalidParam => status == 400 && messageKey == 'INVALID_PARAM';
   bool get isForbidden => status == 403 && messageKey == 'FORBIDDEN';
   bool get isNotFound => status == 404 && messageKey == 'NOT_FOUND';
 

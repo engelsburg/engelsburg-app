@@ -86,7 +86,9 @@ class _SolarPanelPageState extends State<SolarPanelPage> {
               },
               onError: (error) {
                 if (error.isNotFound) {
-                  return const ErrorBox(text: 'Solar panel page not found!');
+                  return ErrorBox(
+                      text: AppLocalizations.of(context)!
+                          .solarPanelPageNotFoundError);
                 }
               },
             );
