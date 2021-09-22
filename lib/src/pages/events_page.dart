@@ -19,28 +19,32 @@ class EventsPage extends StatelessWidget {
         future: ApiService.getEvents(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return snapshot.data!
-                .handle<Events>((json) => Events.fromJson(json), (error) {
-              if (error.isNotFound) {
-                return const ErrorBox(text: 'Events not found!');
-              }
-            }, (events) {
-              return ListView.separated(
-                itemBuilder: (context, index) {
-                  final event = events.events[index];
-                  return ListTile(
-                    title: Text(event.title.toString()),
-                    subtitle: event.date == null
-                        ? null
-                        : Text(_dateFormat.format(event.date as DateTime)),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider(height: 0);
-                },
-                itemCount: events.events.length,
-              );
-            });
+            return snapshot.data!.build<Events>(
+              context,
+              parse: (json) => Events.fromJson(json),
+              onSuccess: (events) {
+                return ListView.separated(
+                  itemBuilder: (context, index) {
+                    final event = events.events[index];
+                    return ListTile(
+                      title: Text(event.title.toString()),
+                      subtitle: event.date == null
+                          ? null
+                          : Text(_dateFormat.format(event.date as DateTime)),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(height: 0);
+                  },
+                  itemCount: events.events.length,
+                );
+              },
+              onError: (error) {
+                if (error.isNotFound) {
+                  return const ErrorBox(text: 'Events not found!');
+                }
+              },
+            );
           }
           return const Center(
             child: CircularProgressIndicator(),
