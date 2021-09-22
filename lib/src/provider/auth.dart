@@ -8,6 +8,9 @@ class AuthModel extends ChangeNotifier {
       _prefs.getString('access_token') != null &&
       _prefs.getString('refresh_token') != null;
 
+  String? get accessToken => _prefs.getString('access_token');
+  String? get refreshToken => _prefs.getString('refresh_token');
+
   void setTokenPair({
     required String accessToken,
     required String refreshToken,

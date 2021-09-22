@@ -22,7 +22,7 @@ class _CafeteriaPageState extends State<CafeteriaPage>
     super.build(context);
     return Scaffold(
       body: FutureBuilder<Result>(
-        future: ApiService.getCafeteria(),
+        future: ApiService.getCafeteria(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.build<String>(

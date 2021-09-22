@@ -191,6 +191,18 @@
   "@error": {
     "description": "Generic error"
   },
+  "notPermittedError": "You don't have the permission to use this feature.",
+  "@notPermittedError": {
+    "description": "Lack of permission"
+  },
+  "needToLoggedInError": "You need be logged in to use this feature.",
+  "@needToLoggedInError": {
+    "description": "Need to be logged in"
+  },
+  "networkError": "No internet connection! Please check your network connection and try again.",
+  "@networkError": {
+    "description": "Network error message"
+  },
   "cafeteriaPageNotFoundError": "Cafeteria page not found!",
   "@cafeteriaPageNotFoundError": {
     "description": "Cafeteria page not found"

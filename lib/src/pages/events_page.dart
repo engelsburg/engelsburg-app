@@ -16,7 +16,7 @@ class EventsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.events)),
       body: FutureBuilder<Result>(
-        future: ApiService.getEvents(),
+        future: ApiService.getEvents(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.build<Events>(

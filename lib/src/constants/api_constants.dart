@@ -9,6 +9,6 @@ class ApiConstants {
   static const engelsburgApiCafeteriaUrl = engelsburgApiBaseUrl + '/cafeteria';
   static const engelsburgApiSolarSystemUrl =
       engelsburgApiBaseUrl + '/solar_system';
-  static const engelsburgApiSignUp = engelsburgApiBaseUrl + '/auth/signup';
-
+  static const engelsburgApiSignUpUrl = engelsburgApiBaseUrl + '/auth/signup';
+  static const engelsburgApiRefreshUrl = engelsburgApiBaseUrl + '/auth/refresh';
 }

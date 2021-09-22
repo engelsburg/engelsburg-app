@@ -1,16 +1,19 @@
 import 'dart:convert';
 
 import 'package:engelsburg_app/src/constants/api_constants.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/auth_info_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/result.dart';
+import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'shared_prefs.dart';
 
 class ApiService {
-  static Future<Result> request(
+  static Future<Result> request(BuildContext context,
       {required Uri uri,
       required HttpMethod method,
       String? cacheKey,
@@ -87,6 +90,42 @@ class ApiService {
       }
     }
 
+    //If access token is expired
+    AuthModel auth = context.read<AuthModel>();
+    if (result.errorPresent() &&
+        result.error!.isExpiredAccessToken &&
+        auth.isLoggedIn) {
+      final refreshTokenUri = Uri.parse(
+        ApiConstants.engelsburgApiRefreshUrl +
+            "?refreshToken=" +
+            auth.refreshToken!,
+      );
+      (await request(context, uri: refreshTokenUri, method: HttpMethod.get))
+          .handle<AuthInfoDTO>(
+        context,
+        parse: (json) => AuthInfoDTO.fromJson(json),
+        onSuccess: (dto) {
+          if (dto!.validate) {
+            auth.setTokenPair(
+              accessToken: dto.token!,
+              refreshToken: dto.refreshToken!,
+            );
+          }
+        },
+      );
+      if (headers != null && auth.isLoggedIn) {
+        headers.update('Authorization', (value) => auth.accessToken!);
+      }
+      return request(
+        context,
+        uri: uri,
+        method: method,
+        cacheKey: cacheKey,
+        body: body,
+        headers: headers,
+      );
+    }
+
     return result;
   }
 
@@ -94,49 +133,73 @@ class ApiService {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
-  static Future<Result> getArticles() async {
+  static Map<String, String> authenticatedEngelsburgApiHeaders(
+      BuildContext context) {
+    AuthModel auth = context.read<AuthModel>();
+    if (!auth.isLoggedIn) {
+      return ApiConstants.unauthenticatedEngelsburgApiHeaders;
+    }
+
+    return {
+      "Authorization": auth.accessToken!,
+      ...ApiConstants.unauthenticatedEngelsburgApiHeaders
+    };
+  }
+
+  static Future<Result> getArticles(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiArticlesUrl);
     return await request(
-        uri: uri,
-        method: HttpMethod.get,
-        cacheKey: 'articles_json',
-        headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: 'articles_json',
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
   }
 
-  static Future<Result> getEvents() async {
+  static Future<Result> getEvents(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiEventsUrl);
     return await request(
-        uri: uri,
-        method: HttpMethod.get,
-        cacheKey: 'events_json',
-        headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: 'events_json',
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
   }
 
-  static Future<Result> getCafeteria() async {
+  static Future<Result> getCafeteria(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiCafeteriaUrl);
     return await request(
-        uri: uri,
-        method: HttpMethod.get,
-        cacheKey: 'cafeteria_json',
-        headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: 'cafeteria_json',
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
   }
 
-  static Future<Result> getSolarSystemData() async {
+  static Future<Result> getSolarSystemData(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSolarSystemUrl);
     return await request(
-        uri: uri,
-        method: HttpMethod.get,
-        cacheKey: 'solar_system_json',
-        headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: 'solar_system_json',
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
   }
 
-  static Future<Result> signUp(SignUpRequestDTO dto) async {
-    final uri = Uri.parse(ApiConstants.engelsburgApiSignUp);
+  static Future<Result> signUp(BuildContext context,
+      {required SignUpRequestDTO dto}) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSignUpUrl);
     return await request(
-        uri: uri,
-        method: HttpMethod.post,
-        body: dto,
-        headers: ApiConstants.unauthenticatedEngelsburgApiHeaders);
+      context,
+      uri: uri,
+      method: HttpMethod.post,
+      body: dto,
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
   }
 }
 

@@ -29,7 +29,7 @@ class _NewsPageState extends State<NewsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder<Result>(
-      future: ApiService.getArticles(),
+      future: ApiService.getArticles(context),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.build<List<Article>>(

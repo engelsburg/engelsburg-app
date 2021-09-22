@@ -89,10 +89,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
                   onPressed: () async {
-                    (await ApiService.signUp(SignUpRequestDTO(
-                            schoolToken: _schoolTokenTextController.text,
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text)))
+                    (await ApiService.signUp(context,
+                            dto: SignUpRequestDTO(
+                              schoolToken: _schoolTokenTextController.text,
+                              email: _emailTextController.text,
+                              password: _passwordTextController.text,
+                            )))
                         .handle<AuthInfoDTO>(
                       context,
                       parse: (json) => AuthInfoDTO.fromJson(json),

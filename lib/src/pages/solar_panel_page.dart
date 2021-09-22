@@ -22,7 +22,7 @@ class _SolarPanelPageState extends State<SolarPanelPage> {
         title: Text(AppLocalizations.of(context)!.solarPanelData),
       ),
       body: FutureBuilder<Result>(
-        future: ApiService.getSolarSystemData(),
+        future: ApiService.getSolarSystemData(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.build<SolarPanel>(
