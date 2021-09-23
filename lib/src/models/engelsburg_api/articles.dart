@@ -1,3 +1,5 @@
+import 'package:engelsburg_app/src/services/db_service.dart';
+
 class Articles {
   Articles({
     this.articles = const [],
@@ -13,11 +15,11 @@ class Articles {
       );
 
   Map<String, dynamic> toJson() => {
-        "articles": List<dynamic>.from(articles.map((x) => x.toJson())),
+        "articles": List<dynamic>.from(articles.map((x) => x.toMap())),
       };
 }
 
-class Article {
+class Article implements DatabaseModel {
   Article({
     this.date,
     this.link,
@@ -43,7 +45,7 @@ class Article {
         blurHash: json['blurHash'],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "date": date,
         "link": link,
         "title": title,
@@ -51,4 +53,14 @@ class Article {
         "mediaUrl": mediaUrl,
         "blurHash": blurHash,
       };
+
+  @override
+  String tableName() {
+    return "articles";
+  }
+
+  @override
+  DatabaseModel parse(Map<String, dynamic> json) {
+    return Article.fromJson(json);
+  }
 }

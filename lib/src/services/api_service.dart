@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import 'db_service.dart';
 import 'shared_prefs.dart';
 
 class ApiService {
@@ -146,8 +147,9 @@ class ApiService {
     };
   }
 
-  static Future<Result> getArticles(BuildContext context) async {
-    final uri = Uri.parse(ApiConstants.engelsburgApiArticlesUrl);
+  static Future<Result> getArticles(BuildContext context, Paging paging) async {
+    final uri =
+        Uri.parse(ApiConstants.engelsburgApiArticlesUrl + _addPaging(paging));
     return await request(
       context,
       uri: uri,
@@ -200,6 +202,10 @@ class ApiService {
       body: dto,
       headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
     );
+  }
+
+  static String _addPaging(Paging paging) {
+    return "?page=${paging.page}&size=${paging.size}";
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:engelsburg_app/src/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import 'src/services/shared_prefs.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.init();
+  await DatabaseService.init();
 
   runApp(
     MultiProvider(

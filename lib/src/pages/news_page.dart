@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
+import 'package:engelsburg_app/src/services/db_service.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:engelsburg_app/src/utils/random_string.dart';
 import 'package:engelsburg_app/src/utils/time_ago.dart';
@@ -29,7 +30,7 @@ class _NewsPageState extends State<NewsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder<Result>(
-      future: ApiService.getArticles(context),
+      future: ApiService.getArticles(context, Paging(0, 20)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.build<List<Article>>(
