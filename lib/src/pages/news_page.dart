@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
-import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:engelsburg_app/src/services/db_service.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:engelsburg_app/src/utils/random_string.dart';
 import 'package:engelsburg_app/src/utils/time_ago.dart';
 import 'package:engelsburg_app/src/widgets/error_box.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/rendering.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -26,39 +27,88 @@ class _NewsPageState extends State<NewsPage>
   @override
   bool get wantKeepAlive => true;
 
+  List<Widget> articles = [
+    Center(
+      child: CircularProgressIndicator(),
+      heightFactor: 2,
+    )
+  ];
+
+  int page = 0;
+  bool isLoading = false;
+  bool isError = false;
+
+  //Bug: gets triggered twice onRefresh
+  Future _loadArticles(bool refreshed) async {
+    if (!isError && refreshed) {
+      setState(() {
+        articles = [
+          Center(
+            child: CircularProgressIndicator(),
+            heightFactor: 2,
+          )
+        ];
+        page = 0;
+      });
+      return;
+    }
+    if (isError && !refreshed) return;
+    setState(() {
+      isError = false;
+      isLoading = true;
+    });
+
+    (await ApiService.getArticles(context, Paging(page, 20)))
+        .handle<List<Article>>(
+      context,
+      parse: (json) => Articles.fromJson(json).articles,
+      onSuccess: (articles) => {
+        this.articles.insertAll(this.articles.length - 1,
+            articles!.map((article) => _newsCard(article)).toList()),
+      },
+      onError: (error) {
+        if (error.isNotFound) {
+          articles.clear();
+          articles.add(ErrorBox(text: 'Articles not found!'));
+          setState(() {
+            isError = true;
+            isLoading = false;
+          });
+        }
+      },
+    );
+
+    setState(() {
+      page++;
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    _loadArticles(false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder<Result>(
-      future: ApiService.getArticles(context, Paging(0, 20)),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data!.build<List<Article>>(
-            context,
-            parse: (json) => Articles.fromJson(json).articles,
-            onSuccess: (articles) {
-              return ListView.separated(
-                  itemBuilder: (context, index) {
-                    final article = articles[index];
-                    return _newsCard(article);
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(height: 0);
-                  },
-                  itemCount: articles.length);
-            },
-            onError: (error) {
-              if (error.isNotFound) {
-                return ErrorBox(
-                    text: AppLocalizations.of(context)!.articlesNotFoundError);
-              }
-            },
-          );
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+
+    return LazyLoadScrollView(
+      isLoading: isLoading,
+      scrollDirection: Axis.vertical,
+      onEndOfPage: () => _loadArticles(false),
+      child: RefreshIndicator(
+        child: ListView.separated(
+          physics: BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          itemCount: articles.length,
+          itemBuilder: (context, index) => articles[index],
+          separatorBuilder: (context, index) => const Divider(height: 0),
+        ),
+        onRefresh: () => _loadArticles(true),
+      ),
     );
   }
 

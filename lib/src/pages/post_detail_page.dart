@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -76,6 +77,35 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   webView: true,
                   webViewJs: true,
                   onTapUrl: (url) => url_launcher.launch(url),
+                  onTapImage: (meta) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            insetPadding: EdgeInsets.all(15),
+                            backgroundColor: Colors.transparent,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: double.infinity,
+                                  height: 500,
+                                  child: OctoImage(
+                                    image: CachedNetworkImageProvider(
+                                        meta.sources.first.url),
+                                    placeholderBuilder: meta.alt != null
+                                        ? OctoPlaceholder.blurHash(
+                                            meta.alt as String)
+                                        : null,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                  },
                   textStyle: const TextStyle(height: 1.5, fontSize: 18.0),
                 ),
               ],
