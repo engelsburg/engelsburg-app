@@ -1,4 +1,10 @@
+import 'package:engelsburg_app/src/models/engelsburg_api/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/provider/auth.dart';
+import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -10,72 +16,148 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   static final _substitutionPlanPasswordFormKey = GlobalKey<FormState>();
   static final _emailAndPasswordFormKey = GlobalKey<FormState>();
-  var currentStep = 0;
+  static var currentStep = 0;
 
-  final steps = [
-    Step(
-        title: const Text('Passwort für den Vertretungsplan'),
-        subtitle: const Text(
-            'Wir müssen bestätigen, dass du auf die Engelsburg gehst!'),
-        content: Form(
-          key: _substitutionPlanPasswordFormKey,
-          child: TextFormField(
-            validator: (input) => input == null || input.isEmpty
-                ? 'Das Feld darf nicht leer sein'
-                : null,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Passwort für den Vertretungsplan',
-            ),
-          ),
-        )),
-    Step(
-      title: const Text('Email und Passwort'),
-      content: Form(
-        key: _emailAndPasswordFormKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
+  static final _schoolTokenTextController = TextEditingController();
+  static final _emailTextController = TextEditingController();
+  static final _passwordTextController = TextEditingController();
+
+  bool _obscured = true;
+
+  List<Step> steps(AuthModel authProvider) {
+    return [
+      Step(
+          title: Text(AppLocalizations.of(context)!.substitutesPassword),
+          subtitle: Text(AppLocalizations.of(context)!.verifyUserIsStudent),
+          content: Form(
+            key: _substitutionPlanPasswordFormKey,
+            child: TextFormField(
+              validator: (input) => input == null || input.isEmpty
+                  ? AppLocalizations.of(context)!.fieldCantBeEmptyError
+                  : null,
+              controller: _schoolTokenTextController,
+              decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Email',
-                prefixIcon: Icon(Icons.mail),
+                labelText: AppLocalizations.of(context)!.substitutesPassword,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: TextFormField(
+          )),
+      Step(
+        title: Text(AppLocalizations.of(context)!.emailPassword),
+        content: Form(
+          key: _emailAndPasswordFormKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: _emailTextController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Passwort',
-                  prefixIcon: Icon(Icons.lock),
+                  labelText: 'Email',
+                  prefixIcon: Icon(Icons.mail),
                 ),
               ),
-            ),
-            Container(
-              height: 64.0,
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Registrieren'),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: TextFormField(
+                  controller: _passwordTextController,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: _obscured,
+                  onChanged: (text) {
+                    if (_obscured == false) setState(() => _obscured = true);
+                  },
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: AppLocalizations.of(context)!.password,
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                      child: GestureDetector(
+                        onTap: () => setState(() => _obscured = !_obscured),
+                        child: Icon(
+                            _obscured
+                                ? Icons.visibility_rounded
+                                : Icons.visibility_off_rounded,
+                            size: 24),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            )
-          ],
+              Container(
+                height: 64.0,
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    (await ApiService.signUp(context,
+                            dto: SignUpRequestDTO(
+                              schoolToken: _schoolTokenTextController.text,
+                              email: _emailTextController.text,
+                              password: _passwordTextController.text,
+                            )))
+                        .handle<AuthInfoDTO>(
+                      context,
+                      parse: (json) => AuthInfoDTO.fromJson(json),
+                      onSuccess: (auth) {
+                        if (auth!.validate) {
+                          authProvider.setTokenPair(
+                              accessToken: auth.token!,
+                              refreshToken: auth.refreshToken!);
+                          ApiService.show(
+                              context, AppLocalizations.of(context)!.loggedIn);
+                          Navigator.pop(context);
+                        } else {
+                          ApiService.show(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .unexpectedErrorMessage);
+                        }
+                      },
+                      onError: (error) {
+                        if (error.isForbidden &&
+                            error.extra == 'school_token') {
+                          ApiService.show(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .wrongSubstituteKeyError);
+                          setState(() => currentStep = 0);
+                        } else if (error.isInvalidParam) {
+                          ApiService.show(context,
+                              AppLocalizations.of(context)!.invalidEmailError);
+                        } else if (error.isAlreadyExisting) {
+                          ApiService.show(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .accountAlreadyExistingError);
+                        } else {
+                          ApiService.show(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .unexpectedErrorMessage);
+                        }
+                      },
+                    );
+                  },
+                  child: Text(AppLocalizations.of(context)!.register),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  ];
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthModel>(context);
     return Scaffold(
       bottomSheet: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Divider(height: 0),
           Row(
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Icon(Icons.lock),
@@ -83,8 +165,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Flexible(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 8.0, 8.0, 8.0),
-                  child: Text(
-                      'Deine Daten werden sicher auf unserem Server in Kassel gespeichert. Das Passwort wird so verschlüsselt, dass es von keinem gelesen werden kann.'),
+                  child: Text(AppLocalizations.of(context)!.dataDisclaimer),
                 ),
               ),
             ],
@@ -92,11 +173,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
       appBar: AppBar(
-        title: const Text('Registrieren'),
+        title: Text(AppLocalizations.of(context)!.register),
       ),
       body: Stepper(
         currentStep: currentStep,
-        onStepContinue: currentStep == steps.length - 1
+        onStepContinue: currentStep == steps(auth).length - 1
             ? null
             : () {
                 final canGoToStep2 = currentStep == 0
@@ -116,7 +197,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   currentStep = currentStep - 1;
                 });
               },
-        steps: steps,
+        steps: steps(auth),
       ),
     );
   }

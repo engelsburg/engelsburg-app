@@ -53,10 +53,11 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.all(16.0),
                         child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(
                                   builder: (context) => const RegisterPage()));
                             },
-                            child: const Text('Anmelden')),
+                            child: Text(AppLocalizations.of(context)!.singIn)),
                       ),
                       const Divider(height: 0),
                     ],

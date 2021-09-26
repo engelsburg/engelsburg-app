@@ -2,6 +2,7 @@ import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class CafeteriaPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _CafeteriaPageState extends State<CafeteriaPage>
     super.build(context);
     return Scaffold(
       body: FutureBuilder<Result>(
-        future: ApiService.getCafeteria(),
+        future: ApiService.getCafeteria(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.build<String>(
@@ -37,7 +38,9 @@ class _CafeteriaPageState extends State<CafeteriaPage>
               },
               onError: (error) {
                 if (error.isNotFound) {
-                  return const ErrorBox(text: 'Cafeteria page not found!');
+                  return ErrorBox(
+                      text: AppLocalizations.of(context)!
+                          .cafeteriaPageNotFoundError);
                 }
               },
             );

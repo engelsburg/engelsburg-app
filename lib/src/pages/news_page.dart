@@ -7,6 +7,7 @@ import 'package:engelsburg_app/src/utils/random_string.dart';
 import 'package:engelsburg_app/src/utils/time_ago.dart';
 import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -28,7 +29,7 @@ class _NewsPageState extends State<NewsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder<Result>(
-      future: ApiService.getArticles(),
+      future: ApiService.getArticles(context),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.build<List<Article>>(
@@ -47,7 +48,8 @@ class _NewsPageState extends State<NewsPage>
             },
             onError: (error) {
               if (error.isNotFound) {
-                return const ErrorBox(text: 'Articles not found!');
+                return ErrorBox(
+                    text: AppLocalizations.of(context)!.articlesNotFoundError);
               }
             },
           );

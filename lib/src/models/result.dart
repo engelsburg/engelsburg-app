@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart';
 
 class Result {
@@ -55,20 +57,13 @@ class Result {
       //Handle errors
       if (error!.status == 0) {
         //Custom status to handle fetching errors
-        //TODO: no network connection, error fetching
-      } else if (error!.status == 400) {
-        if (error!.extra.contains('token')) {
-          if (error!.messageKey == 'EXPIRED') {
-            //TODO: get new JWT
-          } else if (error!.messageKey == 'INVALID' ||
-              error!.messageKey == 'FAILED') {
-            //TODO: try to login again
-          }
-        }
+        ApiService.show(context, AppLocalizations.of(context)!.networkError);
       } else if (error!.status == 401) {
-        //TODO: need to be logged in
+        ApiService.show(
+            context, AppLocalizations.of(context)!.needToLoggedInError);
       } else if (error!.status == 403) {
-        //TODO: don't permitted
+        ApiService.show(
+            context, AppLocalizations.of(context)!.notPermittedError);
       }
     }
   }
@@ -95,23 +90,14 @@ class Result {
 
   Widget _buildCommonError(BuildContext context) {
     if (errorPresent()) {
-      //Handle errors
       if (error!.status == 0) {
         //Custom status to handle fetching errors
-        //TODO: no network connection, error fetching
-      } else if (error!.status == 400) {
-        if (error!.extra.contains('token')) {
-          if (error!.messageKey == 'EXPIRED') {
-            //TODO: get new JWT
-          } else if (error!.messageKey == 'INVALID' ||
-              error!.messageKey == 'FAILED') {
-            //TODO: try to login again
-          }
-        }
+        return ErrorBox(text: AppLocalizations.of(context)!.networkError);
       } else if (error!.status == 401) {
-        //TODO: need to be logged in
+        return ErrorBox(
+            text: AppLocalizations.of(context)!.needToLoggedInError);
       } else if (error!.status == 403) {
-        //TODO: don't permitted
+        return ErrorBox(text: AppLocalizations.of(context)!.notPermittedError);
       }
     }
 
@@ -146,7 +132,10 @@ class ApiError {
 
   factory ApiError.fromStatus(int status) => ApiError(status: status);
 
+  bool get isInvalidParam => status == 400 && messageKey == 'INVALID_PARAM';
+  bool get isForbidden => status == 403 && messageKey == 'FORBIDDEN';
   bool get isNotFound => status == 404 && messageKey == 'NOT_FOUND';
-
   bool get isAlreadyExisting => status == 409 && messageKey == 'ALREADY_EXISTS';
+  bool get isExpiredAccessToken =>
+      status == 400 && messageKey == 'EXPIRED' && extra == 'token';
 }
