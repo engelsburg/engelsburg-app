@@ -54,8 +54,11 @@ class _HomePageState extends State<HomePage> {
                         child: ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => const RegisterPage()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RegisterPage()));
                             },
                             child: Text(AppLocalizations.of(context)!.singIn)),
                       ),
@@ -111,7 +114,6 @@ class _HomePageState extends State<HomePage> {
       ),
       body: PageView(
         controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
         children: AppConstants.bottomNavigationBarPages,
       ),
     );

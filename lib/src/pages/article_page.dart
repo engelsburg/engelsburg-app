@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
+import 'package:engelsburg_app/src/pages/news_page.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,18 +10,18 @@ import 'package:octo_image/octo_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-class PostDetailPage extends StatefulWidget {
+class ArticlePage extends StatefulWidget {
   final Article article;
   final String heroTagFeaturedMedia;
-  const PostDetailPage(
+  const ArticlePage(
       {required this.article, required this.heroTagFeaturedMedia, Key? key})
       : super(key: key);
 
   @override
-  _PostDetailPageState createState() => _PostDetailPageState();
+  _ArticlePageState createState() => _ArticlePageState();
 }
 
-class _PostDetailPageState extends State<PostDetailPage> {
+class _ArticlePageState extends State<ArticlePage> {
   final _dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
 
   @override
@@ -28,6 +29,18 @@ class _PostDetailPageState extends State<PostDetailPage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                setSaved(widget.article, !widget.article.saved);
+              });
+            },
+            icon: Icon(
+              widget.article.saved
+                  ? Icons.bookmark_outlined
+                  : Icons.bookmark_border_outlined,
+            ),
+          ),
           if (widget.article.link != null)
             IconButton(
                 tooltip: AppLocalizations.of(context)!.openInBrowser,

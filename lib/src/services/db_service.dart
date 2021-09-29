@@ -9,13 +9,13 @@ class DatabaseService {
         version: 1, onCreate: (db, v) {
       //Create all tables
       return db.execute(
-          "CREATE TABLE IF NOT EXISTS articles(id INTEGER PRIMARY KEY, date INTEGER, link TEXT, title TEXT, content TEXT, mediaUrl TEXT, blurHash TEXT)");
+          "CREATE TABLE IF NOT EXISTS articles(articleId INTEGER PRIMARY KEY, date INTEGER, link TEXT, title TEXT, content TEXT, contentHash TEXT, mediaUrl TEXT, blurHash TEXT, saved INTEGER)");
     });
   }
 
   static void insert(
     DatabaseModel model, {
-    ConflictAlgorithm? conflictAlgorithm,
+    ConflictAlgorithm? conflictAlgorithm = ConflictAlgorithm.ignore,
   }) {
     _db!.insert(
       model.tableName(),
@@ -24,7 +24,7 @@ class DatabaseService {
     );
   }
 
-  static Future<List<T>> get<T extends DatabaseModel>(
+  static Future<List<D>> getAll<D extends DatabaseModel>(
     DatabaseModel model, {
     Paging? paging,
     String? orderBy,
@@ -39,17 +39,40 @@ class DatabaseService {
       where: where,
       whereArgs: whereArgs,
     ))
-        .map((e) => model.parse(e) as T)
+        .map((e) => model.parse(e) as D)
         .toList();
+  }
+
+  static Future<D?> get<D extends DatabaseModel>(
+    DatabaseModel model, {
+    Paging? paging,
+    String? orderBy,
+    String? where,
+    List<Object>? whereArgs,
+  }) async {
+    final ret = (await _db!.query(
+      model.tableName(),
+      limit: paging == null ? null : paging.size,
+      offset: paging == null ? null : paging.page * paging.size,
+      orderBy: orderBy,
+      where: where,
+      whereArgs: whereArgs,
+    ))
+        .map((e) => model.parse(e) as D);
+
+    return ret.isEmpty ? null : ret.first;
   }
 
   static void update(
     DatabaseModel model, {
     String? where,
     List<Object>? whereArgs,
+    ConflictAlgorithm conflictAlgorithm = ConflictAlgorithm.replace,
   }) {
     _db!.update(model.tableName(), model.toMap(),
-        where: where, whereArgs: whereArgs);
+        where: where,
+        whereArgs: whereArgs,
+        conflictAlgorithm: conflictAlgorithm);
   }
 }
 
