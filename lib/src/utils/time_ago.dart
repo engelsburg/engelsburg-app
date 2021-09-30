@@ -30,7 +30,7 @@ class TimeAgo {
     } else if (difference.inSeconds >= 2) {
       return 'vor ${difference.inSeconds} Sekunden';
     } else {
-      return 'vor 1 Sekunde';
+      return 'vor einer Sekunde';
     }
   }
 }

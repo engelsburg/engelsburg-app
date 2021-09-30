@@ -242,5 +242,13 @@
   "loggedIn": "Logged in successfully!",
   "@loggedIn": {
     "description": "Message on successful login"
+  },
+  "savedArticles": "Saved articles",
+  "@savedArticles": {
+    "description": "Saved articles"
+  },
+  "noArticlesSaved": "You haven't saved any articles yet!",
+  "@noArticlesSaved": {
+    "description": "No articles saved"
   }
 }

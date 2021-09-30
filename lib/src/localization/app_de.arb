@@ -59,5 +59,7 @@
   "invalidEmailError": "Bitte gib eine richtige Email an!",
   "accountAlreadyExistingError": "Ein Account mit dieser Email existiert bereits!",
   "fieldCantBeEmptyError": "Das Feld darf nicht leer sein",
-  "loggedIn": "Erfolgreich angemeldet!"
+  "loggedIn": "Erfolgreich angemeldet!",
+  "savedArticles": "Gespeicherte Artikel",
+  "noArticlesSaved": "Du hast bisher noch keine Artikel gespeichert!"
 }
