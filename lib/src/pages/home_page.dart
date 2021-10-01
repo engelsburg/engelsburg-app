@@ -4,12 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'about_page.dart';
-import 'events_page.dart';
-import 'register_page.dart';
-import 'settings_page.dart';
-import 'solar_panel_page.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -54,11 +48,7 @@ class _HomePageState extends State<HomePage> {
                         child: ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegisterPage()));
+                              Navigator.pushNamed(context, "/register");
                             },
                             child: Text(AppLocalizations.of(context)!.singIn)),
                       ),
@@ -69,35 +59,23 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: const Icon(Icons.wb_sunny),
             title: Text(AppLocalizations.of(context)!.solarPanelData),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const SolarPanelPage()));
-            },
+            onTap: () => Navigator.pushNamed(context, "/solarPanel"),
           ),
           ListTile(
             leading: const Icon(Icons.watch_later),
             title: Text(AppLocalizations.of(context)!.events),
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => EventsPage()));
-            },
+            onTap: () => Navigator.pushNamed(context, "/events"),
           ),
           const Divider(height: 0),
           ListTile(
             leading: const Icon(Icons.settings),
             title: Text(AppLocalizations.of(context)!.settings),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const SettingsPage()));
-            },
+            onTap: () => Navigator.pushNamed(context, "/settings"),
           ),
           ListTile(
             leading: const Icon(Icons.info),
             title: Text(AppLocalizations.of(context)!.about),
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const AboutPage()));
-            },
+            onTap: () => Navigator.pushNamed(context, "/about"),
           ),
         ],
       )),

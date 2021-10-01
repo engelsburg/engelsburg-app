@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
@@ -27,33 +29,6 @@ class _NewsPageState extends State<NewsPage>
   @override
   bool get wantKeepAlive => true;
 
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-
-    return Stack(
-      children: [
-        ArticlesPage(),
-        Positioned(
-          child: FloatingActionButton(
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SavedArticlesPage())),
-            child: Icon(Icons.bookmark_outlined),
-          ),
-          bottom: 20,
-          right: 20,
-        ),
-      ],
-    );
-  }
-}
-
-class ArticlesPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _ArticlesPageState();
-}
-
-class _ArticlesPageState extends State<ArticlesPage> {
   List<Article> articles = [];
 
   int page = 0;
@@ -68,34 +43,63 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return LazyLoadScrollView(
-      isLoading: isLoading,
-      scrollDirection: Axis.vertical,
-      onEndOfPage: () => _loadArticles(false),
-      child: RefreshIndicator(
-        child: ListView.separated(
-          physics: BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          itemCount: articles.length + 1,
-          itemBuilder: (context, index) {
-            if (index == articles.length) {
-              return Center(
-                child: CircularProgressIndicator(),
-                heightFactor: 2,
-              );
-            }
+    super.build(context);
 
-            return _articleCard(
-              context: context,
-              article: articles[index],
-              onSavedPressed: _onSavedPressed,
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(height: 0),
+    return Stack(
+      children: [
+        LazyLoadScrollView(
+          isLoading: isLoading,
+          scrollDirection: Axis.vertical,
+          onEndOfPage: () => _loadArticles(false),
+          child: RefreshIndicator(
+            child: ListView.separated(
+              physics: BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              itemCount: articles.length + 1,
+              itemBuilder: (context, index) {
+                if (index == articles.length) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                    heightFactor: 2,
+                  );
+                }
+
+                return _articleCard(
+                    context: context,
+                    article: articles[index],
+                    onSavedPressed: _onSavedPressed,
+                    afterPop: (saved) {
+                      setState(() {
+                        articles[index].saved = saved;
+                      });
+                    });
+              },
+              separatorBuilder: (context, index) => const Divider(height: 0),
+            ),
+            onRefresh: () => _loadArticles(true),
+          ),
         ),
-        onRefresh: () => _loadArticles(true),
-      ),
+        Positioned(
+          child: FloatingActionButton(
+            onPressed: () async {
+              final unsavedArticles =
+                  await Navigator.pushNamed(context, "/savedArticles");
+              if (unsavedArticles is Set<int>) {
+                setState(() {
+                  articles.forEach((article) {
+                    if (unsavedArticles.contains(article.articleId))
+                      article.saved = false;
+                  });
+                });
+              }
+            },
+            child: Icon(Icons.bookmark_outlined),
+          ),
+          bottom: 20,
+          right: 20,
+        ),
+      ],
     );
   }
 
@@ -166,62 +170,72 @@ class SavedArticlesPage extends StatefulWidget {
   State<StatefulWidget> createState() => _SavedArticlePageState();
 }
 
-class _SavedArticlePageState extends State<SavedArticlesPage> {
+class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
+  Set<int> unsavedArticles = HashSet();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.savedArticles),
-      ),
-      body: FutureBuilder(
-          future: DatabaseService.getAll<Article>(
-            Article(),
-            where: "saved=?",
-            orderBy: "date DESC",
-            whereArgs: [1],
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final data = snapshot.data as List<Article>;
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, unsavedArticles);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.savedArticles),
+        ),
+        body: FutureBuilder(
+            future: DatabaseService.getAll<Article>(
+              Article(),
+              where: "saved=?",
+              orderBy: "date DESC",
+              whereArgs: [1],
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final data = snapshot.data as List<Article>;
 
-              if (data.isEmpty) {
-                return Align(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 30),
-                    child: Text(
-                      AppLocalizations.of(context)!.noArticlesSaved,
-                      textScaleFactor: 1.2,
-                      style: TextStyle(
-                        color: DefaultTextStyle.of(context)
-                            .style
-                            .color!
-                            .withOpacity(3 / 4),
+                if (data.isEmpty) {
+                  return Align(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: Text(
+                        AppLocalizations.of(context)!.noArticlesSaved,
+                        textScaleFactor: 1.2,
+                        style: TextStyle(
+                          color: DefaultTextStyle.of(context)
+                              .style
+                              .color!
+                              .withOpacity(3 / 4),
+                        ),
                       ),
                     ),
+                    alignment: Alignment.topCenter,
+                  );
+                }
+
+                return ListView.separated(
+                  physics: BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
                   ),
-                  alignment: Alignment.topCenter,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) => _articleCard(
+                    context: context,
+                    article: data[index],
+                    onSavedPressed: (article) {
+                      data.remove(article);
+                      setSaved(article, false);
+                      unsavedArticles.add(article.articleId!);
+                      setState(() {});
+                    },
+                  ),
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 0),
                 );
               }
-
-              return ListView.separated(
-                physics: BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-                itemCount: data.length,
-                itemBuilder: (context, index) => _articleCard(
-                  context: context,
-                  article: data[index],
-                  onSavedPressed: (article) {
-                    data.remove(article);
-                    setSaved(article, false);
-                    setState(() {});
-                  },
-                ),
-                separatorBuilder: (context, index) => const Divider(height: 0),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
+              return Center(child: CircularProgressIndicator());
+            }),
+      ),
     );
   }
 }
@@ -238,6 +252,7 @@ Widget _articleCard({
   required BuildContext context,
   required Article article,
   required void Function(Article article) onSavedPressed,
+  void Function(bool saved)? afterPop,
 }) {
   final newsCardId = RandomString.generate(16);
 
@@ -246,10 +261,13 @@ Widget _articleCard({
     child: SizedBox(
       width: 500,
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ArticlePage(
-                  article: article, heroTagFeaturedMedia: newsCardId)));
+        onTap: () async {
+          final saved = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ArticlePage(
+                      article: article, heroTagFeaturedMedia: newsCardId)));
+          if (saved is bool && afterPop != null) afterPop(saved);
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -1,4 +1,4 @@
-import 'package:engelsburg_app/src/pages/cateteria_page.dart';
+import 'package:engelsburg_app/src/pages/cafeteria_page.dart';
 import 'package:engelsburg_app/src/pages/news_page.dart';
 import 'package:flutter/material.dart';
 

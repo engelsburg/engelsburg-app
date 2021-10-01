@@ -7,8 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-import 'about_school_page.dart';
-
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);
 
@@ -73,13 +71,9 @@ class AboutPage extends StatelessWidget {
                 ),
                 const Divider(),
                 ListTile(
-                  leading: const Icon(Icons.school),
-                  title: Text(AppLocalizations.of(context)!.aboutTheSchool),
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AboutSchoolPage())),
-                ),
+                    leading: const Icon(Icons.school),
+                    title: Text(AppLocalizations.of(context)!.aboutTheSchool),
+                    onTap: () => Navigator.pushNamed(context, "/aboutSchool")),
               ],
             );
           }),

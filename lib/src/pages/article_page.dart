@@ -26,105 +26,111 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                setSaved(widget.article, !widget.article.saved);
-              });
-            },
-            icon: Icon(
-              widget.article.saved
-                  ? Icons.bookmark_outlined
-                  : Icons.bookmark_border_outlined,
-            ),
-          ),
-          if (widget.article.link != null)
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, widget.article.saved);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
             IconButton(
-                tooltip: AppLocalizations.of(context)!.openInBrowser,
-                onPressed: () =>
-                    url_launcher.launch(widget.article.link as String),
-                icon: const Icon(Icons.open_in_new)),
-          if (widget.article.link != null)
-            IconButton(
-              tooltip: AppLocalizations.of(context)!.share,
               onPressed: () {
-                Share.share(widget.article.link as String);
+                setState(() {
+                  setSaved(widget.article, !widget.article.saved);
+                });
               },
-              icon: const Icon(Icons.share),
-            )
-        ],
-      ),
-      body: ListView(
-        children: [
-          if (widget.article.mediaUrl != null)
-            Hero(
-              tag: widget.heroTagFeaturedMedia,
-              child: CachedNetworkImage(
-                  height: 250,
-                  fit: BoxFit.cover,
-                  imageUrl: widget.article.mediaUrl as String),
+              icon: Icon(
+                widget.article.saved
+                    ? Icons.bookmark_outlined
+                    : Icons.bookmark_border_outlined,
+              ),
             ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  HtmlUtil.unescape((widget.article.title).toString()),
-                  style: const TextStyle(
-                      fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                if (widget.article.date != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
-                    child: Text(_dateFormat.format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            widget.article.date as int))),
+            if (widget.article.link != null)
+              IconButton(
+                  tooltip: AppLocalizations.of(context)!.openInBrowser,
+                  onPressed: () =>
+                      url_launcher.launch(widget.article.link as String),
+                  icon: const Icon(Icons.open_in_new)),
+            if (widget.article.link != null)
+              IconButton(
+                tooltip: AppLocalizations.of(context)!.share,
+                onPressed: () {
+                  Share.share(widget.article.link as String);
+                },
+                icon: const Icon(Icons.share),
+              )
+          ],
+        ),
+        body: ListView(
+          children: [
+            if (widget.article.mediaUrl != null)
+              Hero(
+                tag: widget.heroTagFeaturedMedia,
+                child: CachedNetworkImage(
+                    height: 250,
+                    fit: BoxFit.cover,
+                    imageUrl: widget.article.mediaUrl as String),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    HtmlUtil.unescape((widget.article.title).toString()),
+                    style: const TextStyle(
+                        fontSize: 24.0, fontWeight: FontWeight.bold),
                   ),
-                const Divider(height: 32.0),
-                HtmlWidget(
-                  (widget.article.content).toString(),
-                  webView: true,
-                  webViewJs: true,
-                  onTapUrl: (url) => url_launcher.launch(url),
-                  onTapImage: (meta) {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                            insetPadding: EdgeInsets.all(15),
-                            backgroundColor: Colors.transparent,
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: <Widget>[
-                                Container(
-                                  width: double.infinity,
-                                  height: 500,
-                                  child: OctoImage(
-                                    image: CachedNetworkImageProvider(
-                                        meta.sources.first.url),
-                                    placeholderBuilder: meta.alt != null
-                                        ? OctoPlaceholder.blurHash(
-                                            meta.alt as String)
-                                        : null,
-                                    fit: BoxFit.contain,
+                  if (widget.article.date != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
+                      child: Text(_dateFormat.format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              widget.article.date as int))),
+                    ),
+                  const Divider(height: 32.0),
+                  HtmlWidget(
+                    (widget.article.content).toString(),
+                    webView: true,
+                    webViewJs: true,
+                    onTapUrl: (url) => url_launcher.launch(url),
+                    onTapImage: (meta) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              insetPadding: EdgeInsets.all(15),
+                              backgroundColor: Colors.transparent,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    width: double.infinity,
+                                    height: 500,
+                                    child: OctoImage(
+                                      image: CachedNetworkImageProvider(
+                                          meta.sources.first.url),
+                                      placeholderBuilder: meta.alt != null
+                                          ? OctoPlaceholder.blurHash(
+                                              meta.alt as String)
+                                          : null,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        });
-                  },
-                  textStyle: const TextStyle(height: 1.5, fontSize: 18.0),
-                ),
-              ],
-            ),
-          )
-        ],
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    textStyle: const TextStyle(height: 1.5, fontSize: 18.0),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
