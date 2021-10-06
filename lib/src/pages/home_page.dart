@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late PageController _pageController;
   var _currentPage = 0;
+  bool _handledByNavBar = false;
 
   @override
   void initState() {
@@ -57,6 +58,11 @@ class _HomePageState extends State<HomePage> {
                   ),
           ),
           ListTile(
+            leading: const Icon(Icons.restaurant_menu),
+            title: Text("Cafeteria"),
+            onTap: () => Navigator.pushNamed(context, "/cafeteria"),
+          ),
+          ListTile(
             leading: const Icon(Icons.wb_sunny),
             title: Text(AppLocalizations.of(context)!.solarPanelData),
             onTap: () => Navigator.pushNamed(context, "/solarPanel"),
@@ -81,17 +87,63 @@ class _HomePageState extends State<HomePage> {
       )),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
+        actions: [
+          if (_currentPage == 4)
+            IconButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, "/settings/substitutes"),
+              icon: Icon(Icons.settings),
+            ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
         currentIndex: _currentPage,
-        items: AppConstants.bottomNavigationBarItems,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            label: 'News',
+            icon: Icon(Icons.library_books),
+          ),
+          BottomNavigationBarItem(
+            label: AppLocalizations.of(context)!.grades,
+            icon: Icon(Icons.assessment),
+          ),
+          BottomNavigationBarItem(
+            label: AppLocalizations.of(context)!.timetable,
+            icon: Icon(Icons.apps_outlined),
+          ),
+          BottomNavigationBarItem(
+            label: AppLocalizations.of(context)!.tasks,
+            icon: Icon(Icons.assignment),
+          ),
+          BottomNavigationBarItem(
+            label: AppLocalizations.of(context)!.substitutes,
+            icon: Icon(Icons.dashboard),
+          ),
+        ],
         onTap: (index) {
-          setState(() => _currentPage = index);
-          _pageController.jumpToPage(_currentPage);
+          setState(() {
+            _currentPage = index;
+            _handledByNavBar = true;
+          });
+          _pageController.animateToPage(_currentPage,
+              duration: Duration(milliseconds: 500), curve: Curves.decelerate);
         },
       ),
       body: PageView(
         controller: _pageController,
+        onPageChanged: (index) {
+          if (!_handledByNavBar) {
+            setState(() => _currentPage = index);
+            _pageController.animateToPage(
+              _currentPage,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.decelerate,
+            );
+          } else if (_currentPage == index) _handledByNavBar = false;
+        },
         children: AppConstants.bottomNavigationBarPages,
       ),
     );

@@ -250,5 +250,29 @@
   "noArticlesSaved": "You haven't saved any articles yet!",
   "@noArticlesSaved": {
     "description": "No articles saved"
+  },
+  "substitutes": "Substitutes",
+  "@substitutes": {
+    "description": "Substitutes"
+  },
+  "timetable": "Timetable",
+  "@timetable": {
+    "description": "Timetable"
+  },
+  "grades": "Grades",
+  "@grades": {
+    "description": "Grades"
+  },
+  "tasks": "Tasks",
+  "@tasks": {
+    "description": "Tasks"
+  },
+  "themeSettings": "Theme settings",
+  "@themeSettings": {
+    "description": "Theme settings"
+  },
+  "notificationSettings": "Notifications",
+  "@notificationSettings": {
+    "description": "Notification settings"
   }
 }

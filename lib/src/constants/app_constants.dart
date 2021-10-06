@@ -1,16 +1,17 @@
-import 'package:engelsburg_app/src/pages/cafeteria_page.dart';
+import 'package:engelsburg_app/src/pages/grades_page.dart';
 import 'package:engelsburg_app/src/pages/news_page.dart';
+import 'package:engelsburg_app/src/pages/substitutes_page.dart';
+import 'package:engelsburg_app/src/pages/tasks_page.dart';
+import 'package:engelsburg_app/src/pages/timetable_page.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {
-  static const bottomNavigationBarItems = [
-    BottomNavigationBarItem(label: 'News', icon: Icon(Icons.library_books)),
-    BottomNavigationBarItem(
-        label: 'Cafeteria', icon: Icon(Icons.restaurant_menu)),
-  ];
   static const bottomNavigationBarPages = <Widget>[
     NewsPage(),
-    CafeteriaPage(),
+    GradesPage(),
+    TimetablePage(),
+    TasksPage(),
+    SubstitutesPage(),
   ];
   static const schoolDescriptionSourceUrl =
       'https://www1.kassel.de/verzeichnisse/schulen/gymnasiale-oberstufen-und-gymnasien/engelsburg.php';

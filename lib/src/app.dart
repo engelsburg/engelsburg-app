@@ -2,10 +2,13 @@ import 'package:engelsburg_app/src/pages/about_page.dart';
 import 'package:engelsburg_app/src/pages/about_school_page.dart';
 import 'package:engelsburg_app/src/pages/cafeteria_page.dart';
 import 'package:engelsburg_app/src/pages/events_page.dart';
+import 'package:engelsburg_app/src/pages/grades_page.dart';
 import 'package:engelsburg_app/src/pages/news_page.dart';
 import 'package:engelsburg_app/src/pages/register_page.dart';
 import 'package:engelsburg_app/src/pages/settings_page.dart';
 import 'package:engelsburg_app/src/pages/solar_panel_page.dart';
+import 'package:engelsburg_app/src/pages/substitutes_page.dart';
+import 'package:engelsburg_app/src/pages/timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -50,9 +53,12 @@ class EngelsburgApp extends StatelessWidget {
         "/news": (context) => NewsPage(),
         "/savedArticles": (context) => SavedArticlesPage(),
         "/cafeteria": (context) => CafeteriaPage(),
-        //"/timetable": (context) => TimetablePage(),
-        //"/grades": (context) => GradesPage(),
-        //"/substitutes": (context) => SubstitutesPage(),
+        "/timetable": (context) => TimetablePage(),
+        "/grades": (context) => GradesPage(),
+        "/substitutes": (context) => SubstitutesPage(),
+        "/settings/substitutes": (context) => SubstitutesSettingsPage(),
+        "/settings/theme": (context) => ThemeSettingsPage(),
+        "/settings/notifications": (context) => NotificationSettingsPage(),
         "/register": (context) => RegisterPage(),
         "/solarPanel": (context) => SolarPanelPage(),
         "/events": (context) => EventsPage(),
