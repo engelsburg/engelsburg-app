@@ -67,5 +67,10 @@
   "grades": "Noten",
   "tasks": "Aufgaben",
   "themeSettings": "Farbeinstellungen",
-  "notificationSettings": "Benachrichtigungen"
+  "notificationSettings": "Benachrichtigungen",
+  "teacher": "Lehrer",
+  "class_": "Klasse",
+  "timetable": "Stundenplan",
+  "filterBy": "Filtern nach",
+  "add": "Hinzufügen"
 }

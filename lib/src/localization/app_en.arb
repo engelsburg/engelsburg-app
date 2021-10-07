@@ -274,5 +274,25 @@
   "notificationSettings": "Notifications",
   "@notificationSettings": {
     "description": "Notification settings"
+  },
+  "teacher": "Teacher",
+  "@teacher": {
+    "description": "Teacher"
+  },
+  "class_": "Class",
+  "@class": {
+    "description": "Class"
+  },
+  "timetable": "Timetable",
+  "@timetable": {
+    "description": "Timetable"
+  },
+  "filterBy": "Filter by",
+  "@filterBy": {
+    "description": "Filter by"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add"
   }
 }
