@@ -5,7 +5,10 @@ import 'package:engelsburg_app/src/pages/events_page.dart';
 import 'package:engelsburg_app/src/pages/grades_page.dart';
 import 'package:engelsburg_app/src/pages/news_page.dart';
 import 'package:engelsburg_app/src/pages/register_page.dart';
-import 'package:engelsburg_app/src/pages/settings_page.dart';
+import 'package:engelsburg_app/src/pages/settings/notifications_settings_page.dart';
+import 'package:engelsburg_app/src/pages/settings/settings_page.dart';
+import 'package:engelsburg_app/src/pages/settings/substitutes_settings_page.dart';
+import 'package:engelsburg_app/src/pages/settings/theme_settings_page.dart';
 import 'package:engelsburg_app/src/pages/solar_panel_page.dart';
 import 'package:engelsburg_app/src/pages/substitutes_page.dart';
 import 'package:engelsburg_app/src/pages/timetable_page.dart';
@@ -49,22 +52,23 @@ class EngelsburgApp extends StatelessWidget {
       themeMode: themeChanger.themeMode,
       initialRoute: "/",
       routes: {
-        "/": (context) => HomePage(),
-        "/news": (context) => NewsPage(),
-        "/savedArticles": (context) => SavedArticlesPage(),
-        "/cafeteria": (context) => CafeteriaPage(),
-        "/timetable": (context) => TimetablePage(),
-        "/grades": (context) => GradesPage(),
-        "/substitutes": (context) => SubstitutesPage(),
-        "/settings/substitutes": (context) => SubstitutesSettingsPage(),
-        "/settings/theme": (context) => ThemeSettingsPage(),
-        "/settings/notifications": (context) => NotificationSettingsPage(),
-        "/register": (context) => RegisterPage(),
-        "/solarPanel": (context) => SolarPanelPage(),
+        "/": (context) => const HomePage(),
+        "/news": (context) => const NewsPage(),
+        "/savedArticles": (context) => const SavedArticlesPage(),
+        "/cafeteria": (context) => const CafeteriaPage(),
+        "/timetable": (context) => const TimetablePage(),
+        "/grades": (context) => const GradesPage(),
+        "/substitutes": (context) => const SubstitutesPage(),
+        "/settings/substitutes": (context) => const SubstitutesSettingsPage(),
+        "/settings/theme": (context) => const ThemeSettingsPage(),
+        "/settings/notifications": (context) =>
+            const NotificationSettingsPage(),
+        "/register": (context) => const RegisterPage(),
+        "/solarPanel": (context) => const SolarPanelPage(),
         "/events": (context) => EventsPage(),
-        "/settings": (context) => SettingsPage(),
-        "/about": (context) => AboutPage(),
-        "/aboutSchool": (context) => AboutSchoolPage(),
+        "/settings": (context) => const SettingsPage(),
+        "/about": (context) => const AboutPage(),
+        "/aboutSchool": (context) => const AboutSchoolPage(),
       },
     );
   }

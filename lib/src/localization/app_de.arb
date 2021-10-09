@@ -70,7 +70,9 @@
   "notificationSettings": "Benachrichtigungen",
   "teacher": "Lehrer",
   "class_": "Klasse",
-  "timetable": "Stundenplan",
   "filterBy": "Filtern nach",
-  "add": "Hinzufügen"
+  "add": "Hinzufügen",
+  "allowNotifications": "Benachrichtigungen erlauben",
+  "articles": "Artikel",
+  "syncWithFilter": "Mit Filter synchronisieren"
 }

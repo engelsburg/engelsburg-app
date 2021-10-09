@@ -1,3 +1,4 @@
+import 'package:engelsburg_app/src/provider/notification.dart';
 import 'package:engelsburg_app/src/provider/substitute.dart';
 import 'package:engelsburg_app/src/services/db_service.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,9 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ThemeChanger()),
         ChangeNotifierProvider(create: (context) => AuthModel()),
         ChangeNotifierProvider(create: (context) => SubstituteSettings()),
+        ChangeNotifierProvider(
+          create: (context) => NotificationSettings(),
+        )
       ],
       child: const EngelsburgApp(),
     ),
