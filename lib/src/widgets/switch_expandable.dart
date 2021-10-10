@@ -6,21 +6,17 @@ class SwitchExpandable extends StatefulWidget {
   final Widget child;
   final bool invert;
 
-  ///AnimatedSize settings
-  final Alignment alignment;
+  ///Animation settings
   final Curve curve;
   final Duration duration;
   final Duration? reverseDuration;
-  final Clip clipBehavior;
 
   const SwitchExpandable({
     Key? key,
     required this.switchListTile,
     required this.child,
-    this.duration = const Duration(milliseconds: 300),
-    this.curve = Curves.decelerate,
-    this.alignment = Alignment.center,
-    this.clipBehavior = Clip.hardEdge,
+    this.duration = const Duration(milliseconds: 500),
+    this.curve = Curves.easeInOut,
     this.reverseDuration,
     this.invert = false,
   }) : super(key: key);
@@ -29,39 +25,41 @@ class SwitchExpandable extends StatefulWidget {
   _SwitchExpandableState createState() => _SwitchExpandableState();
 }
 
-class _SwitchExpandableState extends State<SwitchExpandable> {
-  bool updated =
-      true; //otherwise all cascaded switchExpandable animations get triggered
+class _SwitchExpandableState extends State<SwitchExpandable>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+      reverseDuration: widget.reverseDuration,
+    );
+    animation = CurvedAnimation(parent: controller, curve: widget.curve)
+      ..addListener(() {
+        setState(() {});
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
-    double? height = !widget.switchListTile.value ^ widget.invert ? 0 : null;
-
-    SizedBox box = SizedBox(
-      height: height,
-      child: widget.child,
-    );
+    if (!widget.switchListTile.value ^ widget.invert) {
+      controller.reverse();
+    } else {
+      controller.forward();
+    }
 
     return Column(
       children: [
         widget.switchListTile,
-        updated
-            ? AnimatedSize(
-                child: box,
-                duration: widget.duration,
-                curve: widget.curve,
-                alignment: widget.alignment,
-                clipBehavior: widget.clipBehavior,
-                reverseDuration: widget.reverseDuration ?? widget.duration,
-              )
-            : box,
+        SizeTransition(
+          child: widget.child,
+          sizeFactor: animation,
+        ),
       ],
     );
-  }
-
-  @override
-  void didUpdateWidget(SwitchExpandable oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    updated = oldWidget.switchListTile.value != widget.switchListTile.value;
   }
 }
