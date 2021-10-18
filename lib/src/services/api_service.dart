@@ -207,6 +207,10 @@ class ApiService {
 
   static Future<Result> substituteMessages(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSubstituteMessageUrl);
+    return Result.of(SubstituteMessages(substituteMessages: [
+      SubstituteMessage(date: DateTime.parse("2020-07-02"), messages: "lol")
+    ]).toJson());
+
     return await request(
       context,
       uri: uri,
@@ -278,15 +282,67 @@ class ApiService {
   static Substitutes fakeSubstitutes() {
     return Substitutes(substitutes: [
       Substitute(
-        date: "2020-09-19",
+        date: DateTime.parse("2020-09-19"),
         className: "5c",
         lesson: "6",
         subject: "M",
         substituteTeacher: "EIC",
         teacher: "KRÄ",
-        type: "Vertretung",
+        type: SubstituteTypeExt.parse("Vertretung"),
         room: "H001",
-      )
+      ),
+      Substitute(
+        date: DateTime.parse("2020-10-19"),
+        className: "5a",
+        lesson: "6",
+        subject: "M",
+        substituteTeacher: "EIC",
+        teacher: "KRÄ",
+        type: SubstituteTypeExt.parse("Vertretung"),
+        room: "H001",
+      ),
+      Substitute(
+        date: DateTime.parse("2020-10-19"),
+        className: "5a",
+        lesson: "6",
+        subject: "M",
+        substituteTeacher: "EIC",
+        teacher: "KRÄ",
+        type: SubstituteTypeExt.parse("Entfall"),
+        room: "H001",
+      ),
+      Substitute(
+        date: DateTime.parse("2020-10-19"),
+        className: "5a",
+        lesson: "6",
+        subject: "M",
+        substituteTeacher: "EIC",
+        teacher: "KRÄ",
+        type: SubstituteTypeExt.parse("eigenv. Arb."),
+        room: "H001",
+      ),
+      Substitute(
+        date: DateTime.parse("2020-10-19"),
+        className: "5a",
+        lesson: "6",
+        subject: "M",
+        substituteTeacher: "EIC",
+        teacher: "KRÄ",
+        type: SubstituteTypeExt.parse("Betreuung"),
+        room: "H001",
+      ),
+      Substitute(
+        date: DateTime.parse("2020-10-19"),
+        className: "5a",
+        lesson: "5 - 6",
+        subject: "M",
+        substituteTeacher: "EIC",
+        teacher: "KRÄ",
+        type: SubstituteTypeExt.parse("Raum-Vtr."),
+        room: "H001",
+        text: "Arbeit wird geschrieben",
+        substituteOf: "27.8.",
+      ),
     ]);
   }
 

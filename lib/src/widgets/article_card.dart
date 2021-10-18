@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
 import 'package:engelsburg_app/src/pages/article_page.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
-import 'package:engelsburg_app/src/utils/random_string.dart';
+import 'package:engelsburg_app/src/utils/string_utils.dart';
 import 'package:engelsburg_app/src/utils/time_ago.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class ArticleCard extends StatefulWidget {
 class _ArticleCardState extends State<ArticleCard> {
   @override
   Widget build(BuildContext context) {
-    final newsCardId = RandomString.generate(16);
+    final newsCardId = StringUtils.random(16);
 
     return Align(
       alignment: Alignment.topCenter,
@@ -42,8 +42,9 @@ class _ArticleCardState extends State<ArticleCard> {
                     builder: (context) => ArticlePage(
                         article: widget.article,
                         heroTagFeaturedMedia: newsCardId)));
-            if (saved is bool && widget.afterPop != null)
+            if (saved is bool && widget.afterPop != null) {
               widget.afterPop!(saved);
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(16.0),

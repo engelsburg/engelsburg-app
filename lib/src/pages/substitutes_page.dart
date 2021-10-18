@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SubstitutesPage extends StatefulWidget {
@@ -80,6 +81,7 @@ class _SubstitutesPageState extends State<SubstitutesPage>
   }
 
   Future<void> _updateSubstitutes() async {
+    substitutes.clear();
     SubstituteSettings settings =
         Provider.of<SubstituteSettings>(context, listen: false);
 
@@ -129,10 +131,10 @@ class _SubstitutesPageState extends State<SubstitutesPage>
       }
 
       if (settings.isByTimetable) {
-        //TODO
+        //TODO access database, parse timetable to dto, send request
       }
 
-      this.substitutes = substitutes.toList();
+      this.substitutes = substitutes.toList()..sort(Substitute.compare);
     } else {
       (await ApiService.substitutes(context)).handle<Substitutes>(
         context,
@@ -144,9 +146,11 @@ class _SubstitutesPageState extends State<SubstitutesPage>
         },
       );
     }
+    setState(() {});
   }
 
   Future<void> _updateSubstituteMessages() async {
+    substituteMessages.clear();
     (await ApiService.substituteMessages(context)).handle<SubstituteMessages>(
       context,
       parse: (json) => SubstituteMessages.fromJson(json),
@@ -156,12 +160,17 @@ class _SubstitutesPageState extends State<SubstitutesPage>
         }
       },
     );
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     AuthModel auth = Provider.of<AuthModel>(context);
     if (!auth.isLoggedIn) return const LockedScreen();
+    DateFormat formatter = DateFormat('dd.MM.');
+
+    int addedSubstituteDates = 0;
+    int addedSubstituteMessageDates = 0;
 
     return Scaffold(
       appBar: TabBar(
@@ -182,12 +191,39 @@ class _SubstitutesPageState extends State<SubstitutesPage>
             RefreshIndicator(
               child: substitutes.isNotEmpty
                   ? ListView.separated(
-                      itemBuilder: (context, index) =>
-                          SubstituteCard(substitute: substitutes[index]),
+                      itemBuilder: (context, index) {
+                        bool addText = index != 0 &&
+                            substitutes[index - 1].date ==
+                                substitutes[index].date;
+                        if (addText) addedSubstituteDates++;
+
+                        return Container(
+                          child: addText
+                              ? SubstituteCard(substitute: substitutes[index])
+                              : Column(
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: Text(
+                                            formatter.format(
+                                                substitutes[index].date!),
+                                            textScaleFactor: 2,
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )),
+                                    SubstituteCard(
+                                        substitute: substitutes[index])
+                                  ],
+                                ),
+                        );
+                      },
+                      itemCount: substitutes.length + addedSubstituteDates,
                       padding: const EdgeInsets.all(10),
-                      separatorBuilder: (context, index) =>
-                          Container(height: 10),
-                      itemCount: substitutes.length,
+                      separatorBuilder: (_, __) => Container(height: 10),
                     )
                   : ListView(
                       children: [
@@ -205,12 +241,44 @@ class _SubstitutesPageState extends State<SubstitutesPage>
             RefreshIndicator(
               child: substituteMessages.isNotEmpty
                   ? ListView.separated(
-                      itemBuilder: (context, index) => SubstituteMessageCard(
-                          substituteMessage: substituteMessages[index]),
+                      itemBuilder: (context, index) {
+                        bool addText = index != 0 &&
+                            substituteMessages[index - 1].date ==
+                                substituteMessages[index].date;
+                        if (addText) addedSubstituteMessageDates++;
+
+                        return Container(
+                          child: addText
+                              ? SubstituteMessageCard(
+                                  substituteMessage: substituteMessages[index])
+                              : Column(
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: Text(
+                                            formatter.format(
+                                                substituteMessages[index]
+                                                    .date!),
+                                            textScaleFactor: 2,
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )),
+                                    SubstituteMessageCard(
+                                        substituteMessage:
+                                            substituteMessages[index])
+                                  ],
+                                ),
+                        );
+                      },
                       padding: const EdgeInsets.all(10),
                       separatorBuilder: (context, index) =>
                           Container(height: 10),
-                      itemCount: substituteMessages.length,
+                      itemCount: substituteMessages.length +
+                          addedSubstituteMessageDates,
                     )
                   : ListView(
                       children: [

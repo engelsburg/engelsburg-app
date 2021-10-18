@@ -314,5 +314,77 @@
   "noSubstitutes": "No substitutes available",
   "@noSubstitutes": {
     "description": "No substitutes available"
+  },
+  "insteadOf": "instead of",
+  "@insteadOf": {
+    "description": "instead of"
+  },
+  "substituteTypeCanceled": "Canceled",
+  "@substituteTypeCanceled": {
+    "description": "Canceled"
+  },
+  "substituteTypeIndependentWork": "Independent work",
+  "@substituteTypeIndependentWork": {
+    "description": "Independent work"
+  },
+  "substituteTypeRoomSubstitute": "Room substitute",
+  "@substituteTypeRoomSubstitute": {
+    "description": "Room substitute"
+  },
+  "substituteTypeCare": "Care",
+  "@substituteTypeCare": {
+    "description": "Care"
+  },
+  "substituteTypeSubstitute": "Substitute",
+  "@substituteTypeSubstitute": {
+    "description": "Substitute"
+  },
+  "lesson": "Lesson",
+  "@lesson": {
+    "description": "Lesson"
+  },
+  "subject": "Subject",
+  "@subject": {
+    "description": "Subject"
+  },
+  "substituteTeacher": "Substitute teacher",
+  "@substituteTeacher": {
+    "description": "Substitute teacher"
+  },
+  "substituteOf": "Substitute of",
+  "@substituteOf": {
+    "description": "Substitute of"
+  },
+  "room": "Room",
+  "@room": {
+    "description": "Room"
+  },
+  "furtherInformation": "Further information",
+  "@furtherInformation": {
+    "description": "Further information"
+  },
+  "absenceTeachers": "Absence teachers",
+  "@absenceTeachers": {
+    "description": "Absence teachers"
+  },
+  "absenceClasses": "Absence classes",
+  "@absenceClasses": {
+    "description": "Absence classes"
+  },
+  "affectedClasses": "Affected classes",
+  "@affectedClasses": {
+    "description": "Affected classes"
+  },
+  "affectedRooms": "Affected rooms",
+  "@affectedRooms": {
+    "description": "Affected rooms"
+  },
+  "blockedRooms": "Blocked rooms",
+  "@blockedRooms": {
+    "description": "Blocked rooms"
+  },
+  "news": "News",
+  "@news": {
+    "description": "News"
   }
 }
