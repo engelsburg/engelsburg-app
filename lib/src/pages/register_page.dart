@@ -60,6 +60,18 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return AppLocalizations.of(context)!.noPasswordSpecified;
+                    }
+                    if (!value.contains(RegExp(r"[0-9]"))) {
+                      return AppLocalizations.of(context)!
+                          .passwordMustContainNumber;
+                    }
+                    if (value.length < 8) {
+                      return AppLocalizations.of(context)!.passwordMin8Chars;
+                    }
+                  },
                   controller: _passwordTextController,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscured,
@@ -89,6 +101,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
                   onPressed: () async {
+                    if (!_emailAndPasswordFormKey.currentState!.validate()) {
+                      return;
+                    }
+
                     (await ApiService.signUp(context,
                             dto: SignUpRequestDTO(
                               schoolToken:

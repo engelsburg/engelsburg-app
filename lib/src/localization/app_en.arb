@@ -386,5 +386,17 @@
   "news": "News",
   "@news": {
     "description": "News"
+  },
+  "noPasswordSpecified": "A password must be specified",
+  "@noPasswordSpecified": {
+    "description": "A password must be specified"
+  },
+  "passwordMustContainNumber": "Password must contain a number",
+  "@passwordMustContainNumber": {
+    "description": "Password must contain a number"
+  },
+  "passwordMin8Chars": "Password must be 8 or more characters",
+  "@passwordMin8Chars": {
+    "description": "Password must be 8 or more characters"
   }
 }

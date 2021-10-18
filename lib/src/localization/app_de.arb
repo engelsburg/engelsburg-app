@@ -95,5 +95,8 @@
   "affectedClasses": "Betroffende Klassen",
   "affectedRooms": "Betroffende Räume",
   "blockedRooms": "Blockierte Räume",
-  "news": "Nachrichten"
+  "news": "Nachrichten",
+  "noPasswordSpecified": "Passwort ist ein Pflichtfeld",
+  "passwordMustContainNumber": "Passwort muss eine Zahl enthalten",
+  "passwordMin8Chars": "Password muss 8 oder mehr Zeichen lang sein"
 }
