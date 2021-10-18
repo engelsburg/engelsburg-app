@@ -91,9 +91,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: () async {
                     (await ApiService.signUp(context,
                             dto: SignUpRequestDTO(
-                              schoolToken: _schoolTokenTextController.text,
-                              email: _emailTextController.text,
-                              password: _passwordTextController.text,
+                              schoolToken:
+                                  _schoolTokenTextController.text.trim(),
+                              email: _emailTextController.text.trim(),
+                              password: _passwordTextController.text.trim(),
                             )))
                         .handle<AuthInfoDTO>(
                       context,

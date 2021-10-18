@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:engelsburg_app/src/constants/api_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/auth_info_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/substitutes.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -202,6 +203,91 @@ class ApiService {
       body: dto,
       headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
     );
+  }
+
+  static Future<Result> substituteMessages(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstituteMessageUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitute_messages",
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutes(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl);
+    return Result.of(fakeSubstitutes().toJson());
+
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes",
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutesByClass(BuildContext context,
+      {required String className}) async {
+    final uri =
+        Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl + "/className");
+    return Result.of(fakeSubstitutes().toJson());
+
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes_class_" + className,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutesByTeacher(BuildContext context,
+      {required String teacher}) async {
+    final uri =
+        Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl + "/teacher");
+    return Result.of(fakeSubstitutes().toJson());
+
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes_teacher_" + teacher,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutesBySubstituteTeacher(BuildContext context,
+      {required String substituteTeacher}) async {
+    final uri = Uri.parse(
+        ApiConstants.engelsburgApiSubstitutesUrl + "/substituteTeacher");
+
+    return Result.of(fakeSubstitutes().toJson());
+
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes_substitute_teacher_" + substituteTeacher,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Substitutes fakeSubstitutes() {
+    return Substitutes(substitutes: [
+      Substitute(
+        date: "2020-09-19",
+        className: "5c",
+        lesson: "6",
+        subject: "M",
+        substituteTeacher: "EIC",
+        teacher: "KRÄ",
+        type: "Vertretung",
+        room: "H001",
+      )
+    ]);
   }
 
   static String _addPaging(Paging paging) {

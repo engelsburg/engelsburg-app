@@ -10,8 +10,8 @@ class SubstituteSettings extends ChangeNotifier {
   bool get isByTimetable =>
       _prefs.getBool(_prefix + "timetable_enabled") ?? false;
 
-  List<String>? get classes => _prefs.getStringList(_prefix + "class");
-  List<String>? get teacher => _prefs.getStringList(_prefix + "teacher");
+  List<String> get classes => _prefs.getStringList(_prefix + "class") ?? [];
+  List<String> get teacher => _prefs.getStringList(_prefix + "teacher") ?? [];
 
   void setByClass(bool value) {
     _prefs.setBool(_prefix + "class_enabled", value);

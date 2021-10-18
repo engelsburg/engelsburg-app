@@ -1,5 +1,6 @@
 import 'package:engelsburg_app/src/constants/app_constants.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
+import 'package:engelsburg_app/src/utils/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -12,19 +13,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late PageController _pageController;
   var _currentPage = 0;
   bool _handledByNavBar = false;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentPage);
+    globals.pageController = PageController(initialPage: _currentPage);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    globals.pageController?.dispose();
     super.dispose();
   }
 
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
         showUnselectedLabels: false,
         currentIndex: _currentPage,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             label: 'News',
             icon: Icon(Icons.library_books),
           ),
@@ -128,16 +128,17 @@ class _HomePageState extends State<HomePage> {
             _currentPage = index;
             _handledByNavBar = true;
           });
-          _pageController.animateToPage(_currentPage,
+          globals.pageController!.animateToPage(_currentPage,
               duration: Duration(milliseconds: 500), curve: Curves.decelerate);
         },
       ),
       body: PageView(
-        controller: _pageController,
+        allowImplicitScrolling: false,
+        controller: globals.pageController,
         onPageChanged: (index) {
           if (!_handledByNavBar) {
             setState(() => _currentPage = index);
-            _pageController.animateToPage(
+            globals.pageController?.animateToPage(
               _currentPage,
               duration: Duration(milliseconds: 500),
               curve: Curves.decelerate,

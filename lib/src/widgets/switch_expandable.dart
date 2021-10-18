@@ -15,7 +15,7 @@ class SwitchExpandable extends StatefulWidget {
     Key? key,
     required this.switchListTile,
     required this.child,
-    this.duration = const Duration(milliseconds: 500),
+    this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
     this.reverseDuration,
     this.invert = false,
@@ -46,11 +46,9 @@ class _SwitchExpandableState extends State<SwitchExpandable>
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.switchListTile.value ^ widget.invert) {
-      controller.reverse();
-    } else {
-      controller.forward();
-    }
+    !widget.switchListTile.value ^ widget.invert
+        ? controller.reverse()
+        : controller.forward();
 
     return Column(
       children: [

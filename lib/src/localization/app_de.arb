@@ -47,7 +47,7 @@
   "dataDisclaimer": "Deine Daten werden sicher auf unserem Server in Kassel gespeichert. Das Passwort wird so verschlüsselt, dass es von keinem gelesen werden kann.",
   "substitutesPassword": "Passwort für den Vertretungsplan",
   "error": "Fehler",
-  "notPermittedError": "Du besitzt nicht die nötige Berechtigung, um dieses Featurezu benutzen.",
+  "notPermittedError": "Du besitzt nicht die nötige Berechtigung, um dieses Feature zu benutzen!",
   "needToLoggedInError": "Du musst angemeldet sein, um dieses Featurezu benutzen.",
   "networkError": "Keine Internetverbindung! Bitte überprüfe deine Internetverbindung und versuche es erneut.",
   "cafeteriaPageNotFoundError": "Cafeteria-Seite konnte nicht gefunden werden!",
@@ -62,7 +62,7 @@
   "loggedIn": "Erfolgreich angemeldet!",
   "savedArticles": "Gespeicherte Artikel",
   "noArticlesSaved": "Du hast bisher noch keine Artikel gespeichert!",
-  "substitutes": "Vertretungsplan",
+  "substitutes": "Vertretungen",
   "timetable": "Stundenplan",
   "grades": "Noten",
   "tasks": "Aufgaben",
@@ -74,5 +74,8 @@
   "add": "Hinzufügen",
   "allowNotifications": "Benachrichtigungen erlauben",
   "articles": "Artikel",
-  "syncWithFilter": "Mit Filter synchronisieren"
+  "syncWithFilter": "Mit Filter synchronisieren",
+  "substituteMessages": "Nachrichten",
+  "noSubstituteMessages": "Keine Nachrichten verfügbar",
+  "noSubstitutes": "Keine Vertretungen verfügbar"
 }

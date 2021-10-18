@@ -43,7 +43,7 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
             curve: Curves.decelerate,
             child: Column(
               children: [
-                if (settings.classes != null && settings.classes!.isNotEmpty)
+                if (settings.classes.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Align(
@@ -52,7 +52,7 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                         runAlignment: WrapAlignment.start,
                         spacing: 6.0,
                         runSpacing: 6.0,
-                        children: settings.classes!.map((e) {
+                        children: settings.classes.map((e) {
                           Color color = Theme.of(context).colorScheme.secondary;
                           return Chip(
                             label: Text(e.toUpperCase(),
@@ -62,10 +62,8 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                                 StadiumBorder(side: BorderSide(color: color)),
                             onDeleted: () {
                               final classes = settings.classes;
-                              if (classes != null) {
-                                classes.remove(e);
-                                settings.setClasses(classes);
-                              }
+                              classes.remove(e);
+                              settings.setClasses(classes);
                             },
                           );
                         }).toList(),
@@ -77,7 +75,7 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                   child: TextFormField(
                     controller: classController,
                     onFieldSubmitted: (text) {
-                      final classes = settings.classes ?? [];
+                      final classes = settings.classes;
                       if (!classes.contains(text)) classes.add(text);
                       settings.setClasses(classes);
                       classController.clear();
@@ -112,7 +110,7 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
             curve: Curves.decelerate,
             child: Column(
               children: [
-                if (settings.teacher != null && settings.teacher!.isNotEmpty)
+                if (settings.teacher.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Align(
@@ -121,7 +119,7 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                         runAlignment: WrapAlignment.start,
                         spacing: 6.0,
                         runSpacing: 6.0,
-                        children: settings.teacher!.map((e) {
+                        children: settings.teacher.map((e) {
                           Color color = Theme.of(context).colorScheme.secondary;
                           return Chip(
                             label: Text(e.toUpperCase(),
@@ -131,10 +129,8 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                                 StadiumBorder(side: BorderSide(color: color)),
                             onDeleted: () {
                               final teacher = settings.teacher;
-                              if (teacher != null) {
-                                teacher.remove(e);
-                                settings.setTeacher(teacher);
-                              }
+                              teacher.remove(e);
+                              settings.setTeacher(teacher);
                             },
                           );
                         }).toList(),
@@ -146,7 +142,7 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                   child: TextFormField(
                     controller: teacherController,
                     onFieldSubmitted: (text) {
-                      final teacher = settings.teacher ?? [];
+                      final teacher = settings.teacher;
                       if (!teacher.contains(text)) teacher.add(text);
                       settings.setTeacher(teacher);
                       teacherController.clear();

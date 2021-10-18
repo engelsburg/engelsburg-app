@@ -302,5 +302,17 @@
   "syncWithFilter": "Synchronize with filter",
   "@syncWithFilter": {
     "description": "Synchronize with filter"
+  },
+  "substituteMessages": "News",
+  "@substituteMessages": {
+    "description": "News"
+  },
+  "noSubstituteMessages": "No news available",
+  "@noSubstituteMessages": {
+    "description": "No news available"
+  },
+  "noSubstitutes": "No substitutes available",
+  "@noSubstitutes": {
+    "description": "No substitutes available"
   }
 }
