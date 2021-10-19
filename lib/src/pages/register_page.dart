@@ -1,5 +1,5 @@
-import 'package:engelsburg_app/src/models/engelsburg_api/auth_info_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:flutter/material.dart';

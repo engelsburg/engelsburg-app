@@ -1,3 +1,4 @@
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/substitute_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/substitutes.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/provider/substitute.dart';
@@ -27,7 +28,7 @@ class _SubstitutesPageState extends State<SubstitutesPage>
   DragStartDetails? dragStartDetails;
   Drag? drag;
 
-  List<Substitute> substitutes = [];
+  List<SubstituteDTO> substitutes = [];
   List<SubstituteMessage> substituteMessages = [];
 
   bool _onNotification(Notification notification) {
@@ -46,7 +47,7 @@ class _SubstitutesPageState extends State<SubstitutesPage>
       overScrollLeft = true;
     }
     if (notification is ScrollUpdateNotification) {
-      if (!overScrollLeft) {
+      if (!overScrollLeft && !_controller.indexIsChanging) {
         _controller.offset = _pageController.page ?? _controller.offset;
       } else if (notification.dragDetails != null) {
         _pageController.jumpTo(0);
@@ -82,6 +83,7 @@ class _SubstitutesPageState extends State<SubstitutesPage>
 
   Future<void> _updateSubstitutes() async {
     substitutes.clear();
+    List<Substitute> fetchedSubstitutes = <Substitute>[];
     SubstituteSettings settings =
         Provider.of<SubstituteSettings>(context, listen: false);
 
@@ -134,18 +136,67 @@ class _SubstitutesPageState extends State<SubstitutesPage>
         //TODO access database, parse timetable to dto, send request
       }
 
-      this.substitutes = substitutes.toList()..sort(Substitute.compare);
+      fetchedSubstitutes.addAll(substitutes.toList());
     } else {
       (await ApiService.substitutes(context)).handle<Substitutes>(
         context,
         parse: (json) => Substitutes.fromJson(json),
         onSuccess: (substitutes) {
           if (substitutes != null) {
-            this.substitutes.addAll(substitutes.substitutes);
+            fetchedSubstitutes.addAll(substitutes.substitutes);
           }
         },
       );
     }
+
+    for (var i = 0; i < fetchedSubstitutes.length; i++) {
+      List<int> same = [];
+      int low = 0, high = 0;
+      var sub = fetchedSubstitutes[i];
+      for (var ii = 0; ii < fetchedSubstitutes.length; ii++) {
+        if (ii != i) {
+          var compare = fetchedSubstitutes[ii];
+          if (sub.date == compare.date &&
+              sub.className == compare.className &&
+              sub.teacher == compare.teacher &&
+              sub.substituteTeacher == compare.substituteTeacher &&
+              sub.room == compare.room &&
+              sub.subject == compare.subject &&
+              sub.type == compare.type &&
+              sub.substituteOf == compare.substituteOf) {
+            same.add(ii);
+            if (low == 0 && high == 0) {
+              if (sub.lesson! > compare.lesson!) {
+                high = sub.lesson!;
+              } else {
+                low = compare.lesson!;
+              }
+            }
+
+            if (sub.lesson! > compare.lesson!) {
+              if (sub.lesson! > high) high = sub.lesson!;
+              if (compare.lesson! < low) low = compare.lesson!;
+            } else if (sub.lesson! < compare.lesson!) {
+              if (compare.lesson! > high) high = compare.lesson!;
+              if (sub.lesson! < low) low = sub.lesson!;
+            }
+          }
+        }
+      }
+      if (same.isNotEmpty) {
+        substitutes.add(SubstituteDTO.fromSubstitute(
+          fetchedSubstitutes[same.last],
+          lesson: "$low - $high",
+        ));
+        for (var element in same) {
+          fetchedSubstitutes.removeAt(element);
+        }
+      } else {
+        substitutes.add(SubstituteDTO.fromSubstitute(sub));
+      }
+    }
+
+    substitutes.sort(SubstituteDTO.compare);
     setState(() {});
   }
 
@@ -170,10 +221,11 @@ class _SubstitutesPageState extends State<SubstitutesPage>
     DateFormat formatter = DateFormat('dd.MM.');
 
     int addedSubstituteDates = 0;
-    int addedSubstituteMessageDates = 0;
 
     return Scaffold(
       appBar: TabBar(
+        indicatorColor: Theme.of(context).textTheme.bodyText1!.color,
+        labelColor: Theme.of(context).textTheme.bodyText1!.color,
         onTap: (index) => _pageController.animateToPage(index,
             duration: kTabScrollDuration, curve: Curves.ease),
         controller: _controller,
@@ -241,44 +293,14 @@ class _SubstitutesPageState extends State<SubstitutesPage>
             RefreshIndicator(
               child: substituteMessages.isNotEmpty
                   ? ListView.separated(
-                      itemBuilder: (context, index) {
-                        bool addText = index != 0 &&
-                            substituteMessages[index - 1].date ==
-                                substituteMessages[index].date;
-                        if (addText) addedSubstituteMessageDates++;
-
-                        return Container(
-                          child: addText
-                              ? SubstituteMessageCard(
-                                  substituteMessage: substituteMessages[index])
-                              : Column(
-                                  children: [
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(15),
-                                          child: Text(
-                                            formatter.format(
-                                                substituteMessages[index]
-                                                    .date!),
-                                            textScaleFactor: 2,
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        )),
-                                    SubstituteMessageCard(
-                                        substituteMessage:
-                                            substituteMessages[index])
-                                  ],
-                                ),
-                        );
-                      },
+                      itemBuilder: (context, index) => SubstituteMessageCard(
+                        substituteMessage: substituteMessages[index],
+                        formatter: formatter,
+                      ),
                       padding: const EdgeInsets.all(10),
                       separatorBuilder: (context, index) =>
                           Container(height: 10),
-                      itemCount: substituteMessages.length +
-                          addedSubstituteMessageDates,
+                      itemCount: substituteMessages.length,
                     )
                   : ListView(
                       children: [

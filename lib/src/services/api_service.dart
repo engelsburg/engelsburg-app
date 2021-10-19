@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:engelsburg_app/src/constants/api_constants.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/auth_info_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/substitutes.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -149,8 +148,8 @@ class ApiService {
   }
 
   static Future<Result> getArticles(BuildContext context, Paging paging) async {
-    final uri =
-        Uri.parse(ApiConstants.engelsburgApiArticlesUrl + _addPaging(paging));
+    final uri = Uri.parse(
+        ApiConstants.engelsburgApiArticlesUrl + Query.paging(paging).get());
     return await request(
       context,
       uri: uri,
@@ -193,8 +192,10 @@ class ApiService {
     );
   }
 
-  static Future<Result> signUp(BuildContext context,
-      {required SignUpRequestDTO dto}) async {
+  static Future<Result> signUp(
+    BuildContext context, {
+    required SignUpRequestDTO dto,
+  }) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSignUpUrl);
     return await request(
       context,
@@ -207,10 +208,6 @@ class ApiService {
 
   static Future<Result> substituteMessages(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSubstituteMessageUrl);
-    return Result.of(SubstituteMessages(substituteMessages: [
-      SubstituteMessage(date: DateTime.parse("2020-07-02"), messages: "lol")
-    ]).toJson());
-
     return await request(
       context,
       uri: uri,
@@ -222,8 +219,6 @@ class ApiService {
 
   static Future<Result> substitutes(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl);
-    return Result.of(fakeSubstitutes().toJson());
-
     return await request(
       context,
       uri: uri,
@@ -233,12 +228,14 @@ class ApiService {
     );
   }
 
-  static Future<Result> substitutesByClass(BuildContext context,
-      {required String className}) async {
-    final uri =
-        Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl + "/className");
-    return Result.of(fakeSubstitutes().toJson());
-
+  static Future<Result> substitutesByClass(
+    BuildContext context, {
+    required String className,
+    int? date,
+  }) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl +
+        "/className" +
+        Query.substituteByClass(className, date: date).get());
     return await request(
       context,
       uri: uri,
@@ -248,12 +245,23 @@ class ApiService {
     );
   }
 
-  static Future<Result> substitutesByTeacher(BuildContext context,
-      {required String teacher}) async {
-    final uri =
-        Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl + "/teacher");
-    return Result.of(fakeSubstitutes().toJson());
-
+  static Future<Result> substitutesByTeacher(
+    BuildContext context, {
+    required String teacher,
+    int? lesson,
+    String? className,
+    int? date,
+  }) async {
+    final uri = Uri.parse(
+      ApiConstants.engelsburgApiSubstitutesUrl +
+          "/teacher" +
+          Query.substituteByTeacher(
+            teacher,
+            date: date,
+            className: className,
+            lesson: lesson,
+          ).get(),
+    );
     return await request(
       context,
       uri: uri,
@@ -264,12 +272,11 @@ class ApiService {
   }
 
   static Future<Result> substitutesBySubstituteTeacher(BuildContext context,
-      {required String substituteTeacher}) async {
-    final uri = Uri.parse(
-        ApiConstants.engelsburgApiSubstitutesUrl + "/substituteTeacher");
-
-    return Result.of(fakeSubstitutes().toJson());
-
+      {required String substituteTeacher, int? date}) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl +
+        "/substituteTeacher" +
+        Query.substituteBySubstituteTeacher(substituteTeacher, date: date)
+            .get());
     return await request(
       context,
       uri: uri,
@@ -278,76 +285,84 @@ class ApiService {
       headers: authenticatedEngelsburgApiHeaders(context),
     );
   }
+}
 
-  static Substitutes fakeSubstitutes() {
-    return Substitutes(substitutes: [
-      Substitute(
-        date: DateTime.parse("2020-09-19"),
-        className: "5c",
-        lesson: "6",
-        subject: "M",
-        substituteTeacher: "EIC",
-        teacher: "KRÄ",
-        type: SubstituteTypeExt.parse("Vertretung"),
-        room: "H001",
-      ),
-      Substitute(
-        date: DateTime.parse("2020-10-19"),
-        className: "5a",
-        lesson: "6",
-        subject: "M",
-        substituteTeacher: "EIC",
-        teacher: "KRÄ",
-        type: SubstituteTypeExt.parse("Vertretung"),
-        room: "H001",
-      ),
-      Substitute(
-        date: DateTime.parse("2020-10-19"),
-        className: "5a",
-        lesson: "6",
-        subject: "M",
-        substituteTeacher: "EIC",
-        teacher: "KRÄ",
-        type: SubstituteTypeExt.parse("Entfall"),
-        room: "H001",
-      ),
-      Substitute(
-        date: DateTime.parse("2020-10-19"),
-        className: "5a",
-        lesson: "6",
-        subject: "M",
-        substituteTeacher: "EIC",
-        teacher: "KRÄ",
-        type: SubstituteTypeExt.parse("eigenv. Arb."),
-        room: "H001",
-      ),
-      Substitute(
-        date: DateTime.parse("2020-10-19"),
-        className: "5a",
-        lesson: "6",
-        subject: "M",
-        substituteTeacher: "EIC",
-        teacher: "KRÄ",
-        type: SubstituteTypeExt.parse("Betreuung"),
-        room: "H001",
-      ),
-      Substitute(
-        date: DateTime.parse("2020-10-19"),
-        className: "5a",
-        lesson: "5 - 6",
-        subject: "M",
-        substituteTeacher: "EIC",
-        teacher: "KRÄ",
-        type: SubstituteTypeExt.parse("Raum-Vtr."),
-        room: "H001",
-        text: "Arbeit wird geschrieben",
-        substituteOf: "27.8.",
-      ),
-    ]);
+class Query {
+  Query(this._query);
+
+  Query.all(Iterable<Query> queries) {
+    _query.addAll(queries.map((e) => e._query).reduce((val, e) {
+      val.addAll(e);
+      return val;
+    }));
   }
 
-  static String _addPaging(Paging paging) {
-    return "?page=${paging.page}&size=${paging.size}";
+  Query.date(num date) {
+    _query = {
+      "date": date,
+    };
+  }
+
+  Query.paging(Paging paging) {
+    _query = {
+      "page": paging.page,
+      "size": paging.size,
+    };
+  }
+
+  Query.substituteByClass(String className, {int? date}) {
+    _query = {
+      "className": className,
+      if (date != null) "date": date,
+    };
+  }
+
+  Query.substituteByTeacher(String teacher,
+      {int? lesson, String? className, int? date}) {
+    _query = {
+      "teacher": teacher,
+      if (lesson != null) "lesson": lesson,
+      if (className != null) "className": className,
+      if (date != null) "date": date,
+    };
+  }
+
+  Query.substituteBySubstituteTeacher(String substituteTeacher, {int? date}) {
+    _query = {
+      "substituteTeacher": substituteTeacher,
+      if (date != null) "date": date,
+    };
+  }
+
+  late final Map<String, dynamic> _query;
+
+  static String parse(Map<String, dynamic> query) {
+    StringBuffer buffer = StringBuffer();
+    bool started = false;
+
+    query.forEach((key, value) {
+      if (!started) {
+        started = true;
+        buffer.write("?");
+      } else {
+        buffer.write("&");
+      }
+      buffer.write(key);
+      buffer.write("=");
+      buffer.write(value);
+    });
+
+    return buffer.toString();
+  }
+
+  String get() {
+    return parse(_query);
+  }
+
+  Query add(Query query) {
+    _query.addAll(query._query);
+
+    return this;
   }
 }
 
