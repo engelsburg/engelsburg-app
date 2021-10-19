@@ -37,7 +37,7 @@ class _ArticlePageState extends State<ArticlePage> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  setSaved(widget.article, !widget.article.saved);
+                  updateArticleSaved(widget.article, !widget.article.saved);
                 });
               },
               icon: Icon(

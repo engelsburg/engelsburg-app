@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:engelsburg_app/src/constants/api_constants.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/auth_info_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -148,8 +148,8 @@ class ApiService {
   }
 
   static Future<Result> getArticles(BuildContext context, Paging paging) async {
-    final uri =
-        Uri.parse(ApiConstants.engelsburgApiArticlesUrl + _addPaging(paging));
+    final uri = Uri.parse(
+        ApiConstants.engelsburgApiArticlesUrl + Query.paging(paging).get());
     return await request(
       context,
       uri: uri,
@@ -192,8 +192,10 @@ class ApiService {
     );
   }
 
-  static Future<Result> signUp(BuildContext context,
-      {required SignUpRequestDTO dto}) async {
+  static Future<Result> signUp(
+    BuildContext context, {
+    required SignUpRequestDTO dto,
+  }) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSignUpUrl);
     return await request(
       context,
@@ -204,8 +206,163 @@ class ApiService {
     );
   }
 
-  static String _addPaging(Paging paging) {
-    return "?page=${paging.page}&size=${paging.size}";
+  static Future<Result> substituteMessages(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstituteMessageUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitute_messages",
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutes(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes",
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutesByClass(
+    BuildContext context, {
+    required String className,
+    int? date,
+  }) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl +
+        "/className" +
+        Query.substituteByClass(className, date: date).get());
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes_class_" + className,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutesByTeacher(
+    BuildContext context, {
+    required String teacher,
+    int? lesson,
+    String? className,
+    int? date,
+  }) async {
+    final uri = Uri.parse(
+      ApiConstants.engelsburgApiSubstitutesUrl +
+          "/teacher" +
+          Query.substituteByTeacher(
+            teacher,
+            date: date,
+            className: className,
+            lesson: lesson,
+          ).get(),
+    );
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes_teacher_" + teacher,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> substitutesBySubstituteTeacher(BuildContext context,
+      {required String substituteTeacher, int? date}) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSubstitutesUrl +
+        "/substituteTeacher" +
+        Query.substituteBySubstituteTeacher(substituteTeacher, date: date)
+            .get());
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      cacheKey: "substitutes_substitute_teacher_" + substituteTeacher,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+}
+
+class Query {
+  Query(this._query);
+
+  Query.all(Iterable<Query> queries) {
+    _query.addAll(queries.map((e) => e._query).reduce((val, e) {
+      val.addAll(e);
+      return val;
+    }));
+  }
+
+  Query.date(num date) {
+    _query = {
+      "date": date,
+    };
+  }
+
+  Query.paging(Paging paging) {
+    _query = {
+      "page": paging.page,
+      "size": paging.size,
+    };
+  }
+
+  Query.substituteByClass(String className, {int? date}) {
+    _query = {
+      "className": className,
+      if (date != null) "date": date,
+    };
+  }
+
+  Query.substituteByTeacher(String teacher,
+      {int? lesson, String? className, int? date}) {
+    _query = {
+      "teacher": teacher,
+      if (lesson != null) "lesson": lesson,
+      if (className != null) "className": className,
+      if (date != null) "date": date,
+    };
+  }
+
+  Query.substituteBySubstituteTeacher(String substituteTeacher, {int? date}) {
+    _query = {
+      "substituteTeacher": substituteTeacher,
+      if (date != null) "date": date,
+    };
+  }
+
+  late final Map<String, dynamic> _query;
+
+  static String parse(Map<String, dynamic> query) {
+    StringBuffer buffer = StringBuffer();
+    bool started = false;
+
+    query.forEach((key, value) {
+      if (!started) {
+        started = true;
+        buffer.write("?");
+      } else {
+        buffer.write("&");
+      }
+      buffer.write(key);
+      buffer.write("=");
+      buffer.write(value);
+    });
+
+    return buffer.toString();
+  }
+
+  String get() {
+    return parse(_query);
+  }
+
+  Query add(Query query) {
+    _query.addAll(query._query);
+
+    return this;
   }
 }
 

@@ -1,21 +1,14 @@
 import 'dart:collection';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:engelsburg_app/src/services/db_service.dart';
-import 'package:engelsburg_app/src/utils/html.dart';
-import 'package:engelsburg_app/src/utils/random_string.dart';
-import 'package:engelsburg_app/src/utils/time_ago.dart';
+import 'package:engelsburg_app/src/widgets/article_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:octo_image/octo_image.dart';
-import 'package:share_plus/share_plus.dart';
-
-import 'article_page.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -65,8 +58,7 @@ class _NewsPageState extends State<NewsPage>
                   );
                 }
 
-                return _articleCard(
-                    context: context,
+                return ArticleCard(
                     article: articles[index],
                     onSavedPressed: _onSavedPressed,
                     afterPop: (saved) {
@@ -104,7 +96,7 @@ class _NewsPageState extends State<NewsPage>
   }
 
   void _onSavedPressed(Article article) {
-    setSaved(article, !article.saved);
+    updateArticleSaved(article, !article.saved);
     setState(() {});
   }
 
@@ -219,14 +211,16 @@ class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
                   itemCount: data.length,
-                  itemBuilder: (context, index) => _articleCard(
-                    context: context,
+                  itemBuilder: (context, index) => ArticleCard(
                     article: data[index],
                     onSavedPressed: (article) {
                       data.remove(article);
-                      setSaved(article, false);
+                      updateArticleSaved(article, false);
                       unsavedArticles.add(article.articleId!);
                       setState(() {});
+                    },
+                    afterPop: (saved) {
+                      if (!saved) setState(() => data.remove(data[index]));
                     },
                   ),
                   separatorBuilder: (context, index) =>
@@ -240,109 +234,10 @@ class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
   }
 }
 
-void setSaved(Article article, bool saved) {
+void updateArticleSaved(Article article, bool saved) {
   DatabaseService.update(
     article.setSaved(saved),
     where: "articleId=?",
     whereArgs: [article.articleId!],
-  );
-}
-
-Widget _articleCard({
-  required BuildContext context,
-  required Article article,
-  required void Function(Article article) onSavedPressed,
-  void Function(bool saved)? afterPop,
-}) {
-  final newsCardId = RandomString.generate(16);
-
-  return Align(
-    alignment: Alignment.topCenter,
-    child: SizedBox(
-      width: 500,
-      child: InkWell(
-        onTap: () async {
-          final saved = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ArticlePage(
-                      article: article, heroTagFeaturedMedia: newsCardId)));
-          if (saved is bool && afterPop != null) afterPop(saved);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (article.mediaUrl != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Hero(
-                    tag: newsCardId,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: OctoImage(
-                        image: CachedNetworkImageProvider(
-                            article.mediaUrl as String),
-                        placeholderBuilder: article.blurHash != null
-                            ? OctoPlaceholder.blurHash(
-                                article.blurHash as String,
-                              )
-                            : null,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              Text(
-                HtmlUtil.unescape(article.title.toString()),
-                style: const TextStyle(fontSize: 20.0),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    if (article.date != null)
-                      Text(
-                        TimeAgo.fromDate(DateTime.fromMillisecondsSinceEpoch(
-                            article.date as int)),
-                        style: TextStyle(
-                            color: Theme.of(context).textTheme.caption!.color),
-                      ),
-                    Expanded(child: Container()),
-                    IconButton(
-                      constraints: const BoxConstraints(),
-                      splashRadius: 24.0,
-                      iconSize: 18.0,
-                      onPressed: () => onSavedPressed(article),
-                      icon: Icon(article.saved
-                          ? Icons.bookmark_outlined
-                          : Icons.bookmark_border_outlined),
-                      padding: EdgeInsets.zero,
-                    ),
-                    if (article.link != null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 24.0),
-                        child: IconButton(
-                          constraints: const BoxConstraints(),
-                          splashRadius: 24.0,
-                          iconSize: 18.0,
-                          onPressed: () {
-                            Share.share(article.link as String);
-                          },
-                          icon: const Icon(Icons.share_outlined),
-                          padding: EdgeInsets.zero,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
   );
 }

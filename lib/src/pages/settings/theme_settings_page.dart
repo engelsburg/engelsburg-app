@@ -4,20 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+class ThemeSettingsPage extends StatefulWidget {
+  const ThemeSettingsPage({Key? key}) : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _ThemeSettingsPageState createState() => _ThemeSettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.themeSettings),
+      ),
       body: ListView(
         children: [
           ExpansionTile(

@@ -11,4 +11,8 @@ class ApiConstants {
       engelsburgApiBaseUrl + '/solar_system';
   static const engelsburgApiSignUpUrl = engelsburgApiBaseUrl + '/auth/signup';
   static const engelsburgApiRefreshUrl = engelsburgApiBaseUrl + '/auth/refresh';
+  static const engelsburgApiSubstituteMessageUrl =
+      engelsburgApiBaseUrl + '/substitute/message';
+  static const engelsburgApiSubstitutesUrl =
+      engelsburgApiBaseUrl + "/substitute";
 }

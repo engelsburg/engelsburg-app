@@ -250,5 +250,153 @@
   "noArticlesSaved": "You haven't saved any articles yet!",
   "@noArticlesSaved": {
     "description": "No articles saved"
+  },
+  "substitutes": "Substitutes",
+  "@substitutes": {
+    "description": "Substitutes"
+  },
+  "timetable": "Timetable",
+  "@timetable": {
+    "description": "Timetable"
+  },
+  "grades": "Grades",
+  "@grades": {
+    "description": "Grades"
+  },
+  "tasks": "Tasks",
+  "@tasks": {
+    "description": "Tasks"
+  },
+  "themeSettings": "Theme settings",
+  "@themeSettings": {
+    "description": "Theme settings"
+  },
+  "notificationSettings": "Notifications",
+  "@notificationSettings": {
+    "description": "Notification settings"
+  },
+  "teacher": "Teacher",
+  "@teacher": {
+    "description": "Teacher"
+  },
+  "class_": "Class",
+  "@class": {
+    "description": "Class"
+  },
+  "filterBy": "Filter by",
+  "@filterBy": {
+    "description": "Filter by"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add"
+  },
+  "allowNotifications": "Allow notifications",
+  "@allowNotifications": {
+    "description": "Allow notifications"
+  },
+  "articles": "Articles",
+  "@articles": {
+    "description": "Articles"
+  },
+  "syncWithFilter": "Synchronize with filter",
+  "@syncWithFilter": {
+    "description": "Synchronize with filter"
+  },
+  "substituteMessages": "News",
+  "@substituteMessages": {
+    "description": "News"
+  },
+  "noSubstituteMessages": "No news available",
+  "@noSubstituteMessages": {
+    "description": "No news available"
+  },
+  "noSubstitutes": "No substitutes available",
+  "@noSubstitutes": {
+    "description": "No substitutes available"
+  },
+  "insteadOf": "instead of",
+  "@insteadOf": {
+    "description": "instead of"
+  },
+  "substituteTypeCanceled": "Canceled",
+  "@substituteTypeCanceled": {
+    "description": "Canceled"
+  },
+  "substituteTypeIndependentWork": "Independent work",
+  "@substituteTypeIndependentWork": {
+    "description": "Independent work"
+  },
+  "substituteTypeRoomSubstitute": "Room substitute",
+  "@substituteTypeRoomSubstitute": {
+    "description": "Room substitute"
+  },
+  "substituteTypeCare": "Care",
+  "@substituteTypeCare": {
+    "description": "Care"
+  },
+  "substituteTypeSubstitute": "Substitute",
+  "@substituteTypeSubstitute": {
+    "description": "Substitute"
+  },
+  "lesson": "Lesson",
+  "@lesson": {
+    "description": "Lesson"
+  },
+  "subject": "Subject",
+  "@subject": {
+    "description": "Subject"
+  },
+  "substituteTeacher": "Substitute teacher",
+  "@substituteTeacher": {
+    "description": "Substitute teacher"
+  },
+  "substituteOf": "Substitute of",
+  "@substituteOf": {
+    "description": "Substitute of"
+  },
+  "room": "Room",
+  "@room": {
+    "description": "Room"
+  },
+  "furtherInformation": "Further information",
+  "@furtherInformation": {
+    "description": "Further information"
+  },
+  "absenceTeachers": "Absence teachers",
+  "@absenceTeachers": {
+    "description": "Absence teachers"
+  },
+  "absenceClasses": "Absence classes",
+  "@absenceClasses": {
+    "description": "Absence classes"
+  },
+  "affectedClasses": "Affected classes",
+  "@affectedClasses": {
+    "description": "Affected classes"
+  },
+  "affectedRooms": "Affected rooms",
+  "@affectedRooms": {
+    "description": "Affected rooms"
+  },
+  "blockedRooms": "Blocked rooms",
+  "@blockedRooms": {
+    "description": "Blocked rooms"
+  },
+  "news": "News",
+  "@news": {
+    "description": "News"
+  },
+  "noPasswordSpecified": "A password must be specified",
+  "@noPasswordSpecified": {
+    "description": "A password must be specified"
+  },
+  "passwordMustContainNumber": "Password must contain a number",
+  "@passwordMustContainNumber": {
+    "description": "Password must contain a number"
+  },
+  "passwordMin8Chars": "Password must be 8 or more characters",
+  "@passwordMin8Chars": {
+    "description": "Password must be 8 or more characters"
   }
 }
