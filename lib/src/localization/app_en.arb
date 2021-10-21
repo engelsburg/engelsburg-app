@@ -199,6 +199,10 @@
   "@needToLoggedInError": {
     "description": "Need to be logged in"
   },
+  "needToVerifiedError": "You need to verify your email to use this feature.",
+  "@needToVerifiedError": {
+    "description": "Need to be verified"
+  },
   "networkError": "No internet connection! Please check your network connection and try again.",
   "@networkError": {
     "description": "Network error message"
@@ -398,5 +402,9 @@
   "passwordMin8Chars": "Password must be 8 or more characters",
   "@passwordMin8Chars": {
     "description": "Password must be 8 or more characters"
+  },
+  "loginForAdvancedFeatures": "Login to enable advanced features like synchronization between devices",
+  "@loginForAdvancedFeatures": {
+    "description": "Login for advanced features"
   }
 }

@@ -1,3 +1,4 @@
+import 'package:engelsburg_app/src/widgets/locked.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -21,17 +22,23 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () => Navigator.pushNamed(context, "/settings/theme"),
           ),
           const Divider(height: 0),
-          ListTile(
-            leading: const Icon(Icons.dashboard),
-            title: Text(AppLocalizations.of(context)!.substitutes),
-            onTap: () => Navigator.pushNamed(context, "/settings/substitutes"),
+          Locked(
+            enforceVerified: false,
+            child: ListTile(
+              leading: const Icon(Icons.dashboard),
+              title: Text(AppLocalizations.of(context)!.substitutes),
+              onTap: () =>
+                  Navigator.pushNamed(context, "/settings/substitutes"),
+            ),
           ),
           const Divider(height: 0),
-          ListTile(
-            leading: const Icon(Icons.notifications_outlined),
-            title: Text(AppLocalizations.of(context)!.notificationSettings),
-            onTap: () =>
-                Navigator.pushNamed(context, "/settings/notifications"),
+          Locked(
+            child: ListTile(
+              leading: const Icon(Icons.notifications_outlined),
+              title: Text(AppLocalizations.of(context)!.notificationSettings),
+              onTap: () =>
+                  Navigator.pushNamed(context, "/settings/notifications"),
+            ),
           ),
           const Divider(height: 0),
         ],

@@ -49,6 +49,7 @@
   "error": "Fehler",
   "notPermittedError": "Du besitzt nicht die nötige Berechtigung, um dieses Feature zu benutzen!",
   "needToLoggedInError": "Du musst angemeldet sein, um dieses Featurezu benutzen.",
+  "needToVerifiedError": "Du musst deine Email verifizieren, um dieses Feature zu benutzen.",
   "networkError": "Keine Internetverbindung! Bitte überprüfe deine Internetverbindung und versuche es erneut.",
   "cafeteriaPageNotFoundError": "Cafeteria-Seite konnte nicht gefunden werden!",
   "eventsNotFoundError": "Events konnten nicht gefunden werden!",
@@ -98,5 +99,6 @@
   "news": "Nachrichten",
   "noPasswordSpecified": "Passwort ist ein Pflichtfeld",
   "passwordMustContainNumber": "Passwort muss eine Zahl enthalten",
-  "passwordMin8Chars": "Password muss 8 oder mehr Zeichen lang sein"
+  "passwordMin8Chars": "Password muss 8 oder mehr Zeichen lang sein",
+  "loginForAdvancedFeatures": "Melde dich an um erweiterte Funktionen wie Synchronisation zwischen Geräten freizuschalten"
 }

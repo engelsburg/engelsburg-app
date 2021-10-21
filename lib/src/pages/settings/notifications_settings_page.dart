@@ -238,14 +238,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             title: Text(AppLocalizations.of(context)!.allowNotifications),
             onChanged: (value) => settings.setEnabled(value),
           ),
-          AbsorbPointer(
-            absorbing: !settings.enabled,
-            child: ColorFiltered(
-              colorFilter: settings.enabled
-                  ? ColorFilter.mode(Colors.white, BlendMode.dst)
-                  : ColorFilter.mode(Colors.grey[600]!, BlendMode.srcATop),
-              child: switches,
-            ),
+          Disabled(
+            disabled: !settings.enabled,
+            child: switches,
           ),
         ],
       ),
