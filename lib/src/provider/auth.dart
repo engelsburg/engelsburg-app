@@ -7,6 +7,8 @@ class AuthModel extends ChangeNotifier {
   bool get isLoggedIn =>
       _prefs.getString('access_token') != null &&
       _prefs.getString('refresh_token') != null;
+  bool get isVerified => _prefs.getBool('verified') ?? false;
+  set verified(bool verified) => _prefs.setBool('verified', verified);
 
   String? get accessToken => _prefs.getString('access_token');
   String? get refreshToken => _prefs.getString('refresh_token');

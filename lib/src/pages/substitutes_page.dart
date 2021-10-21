@@ -4,7 +4,7 @@ import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/provider/substitute.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:engelsburg_app/src/utils/globals.dart' as globals;
-import 'package:engelsburg_app/src/widgets/locked_screen.dart';
+import 'package:engelsburg_app/src/widgets/locked.dart';
 import 'package:engelsburg_app/src/widgets/substitute_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';

@@ -1,6 +1,9 @@
+import 'package:engelsburg_app/src/provider/auth.dart';
+import 'package:engelsburg_app/src/widgets/switch_expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class LockedScreen extends StatefulWidget {
   const LockedScreen({Key? key}) : super(key: key);
@@ -84,5 +87,42 @@ class _LockedScreenState extends State<LockedScreen>
       ),
       onTap: () => controller.forward(),
     );
+  }
+}
+
+class Locked extends StatelessWidget {
+  const Locked({Key? key, required this.child, this.enforceVerified = true})
+      : super(key: key);
+
+  final Widget child;
+  final bool enforceVerified;
+
+  @override
+  Widget build(BuildContext context) {
+    AuthModel auth = context.read<AuthModel>();
+    final key = GlobalKey<State<Tooltip>>();
+
+    if (!auth.isLoggedIn || (!auth.isVerified && enforceVerified)) {
+      return Tooltip(
+        key: key,
+        message: !auth.isLoggedIn
+            ? AppLocalizations.of(context)!.needToLoggedInError
+            : AppLocalizations.of(context)!.needToVerifiedError,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _onTap(key),
+          child: Disabled(
+            child: child,
+          ),
+        ),
+      );
+    }
+
+    return child;
+  }
+
+  void _onTap(GlobalKey key) {
+    final dynamic tooltip = key.currentState;
+    tooltip?.ensureTooltipVisible();
   }
 }

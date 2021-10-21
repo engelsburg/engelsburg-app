@@ -61,3 +61,24 @@ class _SwitchExpandableState extends State<SwitchExpandable>
     );
   }
 }
+
+class Disabled extends StatelessWidget {
+  const Disabled({Key? key, required this.child, this.disabled = true})
+      : super(key: key);
+
+  final Widget child;
+  final bool disabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return AbsorbPointer(
+      absorbing: disabled,
+      child: ColorFiltered(
+        colorFilter: disabled
+            ? ColorFilter.mode(Colors.grey[600]!, BlendMode.srcATop)
+            : const ColorFilter.mode(Colors.white, BlendMode.dst),
+        child: child,
+      ),
+    );
+  }
+}
