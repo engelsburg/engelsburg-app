@@ -15,4 +15,6 @@ class ApiConstants {
       engelsburgApiBaseUrl + '/substitute/message';
   static const engelsburgApiSubstitutesUrl =
       engelsburgApiBaseUrl + "/substitute";
+  static String engelsburgApiUserDataUrl = engelsburgApiBaseUrl + '/user/data';
+  static String engelsburgApiSignInUrl = engelsburgApiBaseUrl + '/auth/login';
 }

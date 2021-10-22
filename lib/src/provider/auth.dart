@@ -22,9 +22,10 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearTokenPair() async {
+  void clear() async {
     await _prefs.remove('access_token');
     await _prefs.remove('refresh_token');
+    await _prefs.remove('verified');
     notifyListeners();
   }
 }

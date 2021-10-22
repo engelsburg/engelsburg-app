@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
-import 'package:engelsburg_app/src/pages/article_page.dart';
+import 'package:engelsburg_app/src/pages/home/article_page.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:engelsburg_app/src/utils/string_utils.dart';
 import 'package:engelsburg_app/src/utils/time_ago.dart';

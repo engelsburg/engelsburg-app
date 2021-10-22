@@ -2,22 +2,24 @@ import 'package:engelsburg_app/src/pages/about_page.dart';
 import 'package:engelsburg_app/src/pages/about_school_page.dart';
 import 'package:engelsburg_app/src/pages/cafeteria_page.dart';
 import 'package:engelsburg_app/src/pages/events_page.dart';
-import 'package:engelsburg_app/src/pages/grades_page.dart';
-import 'package:engelsburg_app/src/pages/news_page.dart';
-import 'package:engelsburg_app/src/pages/register_page.dart';
+import 'package:engelsburg_app/src/pages/home/grades_page.dart';
+import 'package:engelsburg_app/src/pages/home/news_page.dart';
+import 'package:engelsburg_app/src/pages/home/timetable_page.dart';
 import 'package:engelsburg_app/src/pages/settings/notifications_settings_page.dart';
 import 'package:engelsburg_app/src/pages/settings/settings_page.dart';
 import 'package:engelsburg_app/src/pages/settings/substitutes_settings_page.dart';
 import 'package:engelsburg_app/src/pages/settings/theme_settings_page.dart';
 import 'package:engelsburg_app/src/pages/solar_panel_page.dart';
 import 'package:engelsburg_app/src/pages/substitutes_page.dart';
-import 'package:engelsburg_app/src/pages/timetable_page.dart';
+import 'package:engelsburg_app/src/pages/user/account_page.dart';
+import 'package:engelsburg_app/src/pages/user/sign_in_page.dart';
+import 'package:engelsburg_app/src/pages/user/sing_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'pages/home_page.dart';
+import 'pages/home/home_page.dart';
 import 'provider/theme.dart';
 
 /// The Widget that configures your application.
@@ -63,7 +65,10 @@ class EngelsburgApp extends StatelessWidget {
         "/settings/theme": (context) => const ThemeSettingsPage(),
         "/settings/notifications": (context) =>
             const NotificationSettingsPage(),
-        "/register": (context) => const RegisterPage(),
+        "/signUp": (context) => const SingUpPage(),
+        "/signIn": (context) => const SignInPage(),
+        "/account": (context) => const AccountPage(),
+        "/account/advanced": (context) => const AccountAdvancedPage(),
         "/solarPanel": (context) => const SolarPanelPage(),
         "/events": (context) => EventsPage(),
         "/settings": (context) => const SettingsPage(),

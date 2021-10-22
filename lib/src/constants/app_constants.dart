@@ -1,8 +1,8 @@
-import 'package:engelsburg_app/src/pages/grades_page.dart';
-import 'package:engelsburg_app/src/pages/news_page.dart';
+import 'package:engelsburg_app/src/pages/home/grades_page.dart';
+import 'package:engelsburg_app/src/pages/home/news_page.dart';
+import 'package:engelsburg_app/src/pages/home/tasks_page.dart';
+import 'package:engelsburg_app/src/pages/home/timetable_page.dart';
 import 'package:engelsburg_app/src/pages/substitutes_page.dart';
-import 'package:engelsburg_app/src/pages/tasks_page.dart';
-import 'package:engelsburg_app/src/pages/timetable_page.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {

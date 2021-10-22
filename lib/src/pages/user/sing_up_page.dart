@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class SingUpPage extends StatefulWidget {
+  const SingUpPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SingUpPageState createState() => _SingUpPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SingUpPageState extends State<SingUpPage> {
   static final _substitutionPlanPasswordFormKey = GlobalKey<FormState>();
   static final _emailAndPasswordFormKey = GlobalKey<FormState>();
   static var currentStep = 0;
@@ -51,10 +51,10 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               TextFormField(
                 controller: _emailTextController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.mail),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)!.email,
+                  prefixIcon: const Icon(Icons.mail),
                 ),
               ),
               Padding(
@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return AppLocalizations.of(context)!.noPasswordSpecified;
-                    } else if (!value.contains(RegExp(r"[0-9]"))) {
+                    } else if (!value.contains(RegExp(r"[0-9a-zA-Z]"))) {
                       return AppLocalizations.of(context)!
                           .passwordMustContainNumber;
                     } else if (value.length < 8) {
@@ -153,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     );
                   },
-                  child: Text(AppLocalizations.of(context)!.register),
+                  child: Text(AppLocalizations.of(context)!.signUp),
                 ),
               ),
             ],
@@ -188,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.register),
+        title: Text(AppLocalizations.of(context)!.signUp),
       ),
       body: Stepper(
         currentStep: currentStep,

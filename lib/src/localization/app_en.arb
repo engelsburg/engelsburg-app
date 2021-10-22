@@ -3,7 +3,7 @@
   "@appTitle": {
     "description": "The title of the application"
   },
-  "appDescription": "An app that displays information about Engelsburg High School.\n\nDeveloped by students Paul Huerkamp (backend) and Dario Trombello (frontend/Android & iOS app).",
+  "appDescription": "An app that displays information about Engelsburg High School.\n\nDeveloped by students Paul Huerkamp and Dario Trombello .",
   "@appDescription": {
     "description": "The description of the app, shown on the about page"
   },
@@ -159,13 +159,13 @@
   "@renumeration": {
     "description": "Used on the solar panel data page"
   },
-  "singIn": "Sign in",
+  "signIn": "Sign in",
   "@signIn": {
     "description": "Used on drawer to login"
   },
-  "register": "Register",
-  "@register": {
-    "description": "Register"
+  "signUp": "Sign up",
+  "@signUp": {
+    "description": "Sign up"
   },
   "password": "Password",
   "@password": {
@@ -406,5 +406,61 @@
   "loginForAdvancedFeatures": "Login to enable advanced features like synchronization between devices",
   "@loginForAdvancedFeatures": {
     "description": "Login for advanced features"
+  },
+  "verifyEmail": "Verify your email address",
+  "@verifyEmail": {
+    "description": "Verify email address"
+  },
+  "emailVerified": "Email address is verified",
+  "@emailVerified": {
+    "description": "Email verified"
+  },
+  "emailNotVerified": "Email address has not been verified yet",
+  "@emailNotVerified": {
+    "description": "Email verified"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout"
+  },
+  "advanced": "Advanced",
+  "@advanced": {
+    "description": "Advanced"
+  },
+  "accountSettings": "Account settings",
+  "@accountSettings": {
+    "description": "Account settings"
+  },
+  "deleteAccount": "Delete your account",
+  "@deleteAccount": {
+    "description": "Delete your account"
+  },
+  "accountData": "Account data",
+  "@accountData": {
+    "description": "Account data"
+  },
+  "requestAccountData": "Request account data",
+  "@requestAccountData": {
+    "description": "Request account data"
+  },
+  "confirmDeleteAccount": "Are you sure you want to delete your account? This action cannot be undone.",
+  "@confirmDeleteAccount": {
+    "description": "Confirm to delete your account"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete"
+  },
+  "userNotFound": "Couldn't find an account with this email address",
+  "@userAlreadyExisting": {
+    "description": "User couldn't be found"
+  },
+  "wrongPassword": "Wrong password",
+  "@wrongPassword": {
+    "description": "Wrong password"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email"
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:engelsburg_app/src/constants/api_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_in_request_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
@@ -206,6 +207,20 @@ class ApiService {
     );
   }
 
+  static Future<Result> signIn(
+    BuildContext context, {
+    required SignInRequestDTO dto,
+  }) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSignInUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.post,
+      body: dto,
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
+  }
+
   static Future<Result> substituteMessages(BuildContext context) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSubstituteMessageUrl);
     return await request(
@@ -282,6 +297,26 @@ class ApiService {
       uri: uri,
       method: HttpMethod.get,
       cacheKey: "substitutes_substitute_teacher_" + substituteTeacher,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> accountData(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiUserDataUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> deleteAccount(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiUserDataUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.delete,
       headers: authenticatedEngelsburgApiHeaders(context),
     );
   }
