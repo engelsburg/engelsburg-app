@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -134,9 +137,10 @@ class AccountAdvancedPage extends StatelessWidget {
             leading: const Icon(Icons.analytics_outlined),
             title: Text(AppLocalizations.of(context)!.requestAccountData),
             onTap: () async {
-              (await ApiService.accountData(context)).handle<String>(
+              (await ApiService.accountData(context))
+                  .handle<Map<String, dynamic>>(
                 context,
-                parse: (json) => json.toString(),
+                parse: (json) => Result.keepJson(json),
                 onSuccess: (data) {
                   Navigator.push(
                       context,
@@ -209,23 +213,26 @@ class AccountAdvancedPage extends StatelessWidget {
 class AccountData extends StatelessWidget {
   const AccountData({Key? key, required this.json}) : super(key: key);
 
-  final String json;
+  final Map<String, dynamic> json;
+  static const encoder = JsonEncoder.withIndent('  ');
 
   @override
   Widget build(BuildContext context) {
+    var prettyString = encoder.convert(json);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.accountData),
         actions: [
           IconButton(
             icon: const Icon(Icons.copy),
-            onPressed: () => Clipboard.setData(ClipboardData(text: json)),
+            onPressed: () =>
+                Clipboard.setData(ClipboardData(text: prettyString)),
           ),
         ],
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Text(json),
+          child: Text(prettyString),
         ),
       ),
     );

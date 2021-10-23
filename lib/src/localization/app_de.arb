@@ -114,5 +114,8 @@
   "delete": "Löschen",
   "userNotFound": "Es konnte kein Account mit dieser E-Mail gefunden werden",
   "wrongPassword": "Falsches Passwort",
-  "email": "E-Mail"
+  "email": "E-Mail",
+  "or": "oder",
+  "signUpWithGoogle": "Registriere dich mit Google",
+  "signInWithGoogle": "Melde dich mit Google an"
 }

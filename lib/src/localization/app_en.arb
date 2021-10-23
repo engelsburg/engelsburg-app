@@ -159,7 +159,7 @@
   "@renumeration": {
     "description": "Used on the solar panel data page"
   },
-  "signIn": "Sign in",
+  "signIn": "Log in",
   "@signIn": {
     "description": "Used on drawer to login"
   },
@@ -462,5 +462,17 @@
   "email": "Email",
   "@email": {
     "description": "Email"
+  },
+  "or": "or",
+  "@or": {
+    "description": "or"
+  },
+  "signUpWithGoogle": "Sign up with Google",
+  "@signUpWithGoogle": {
+    "description": "Sign up with Google"
+  },
+  "signInWithGoogle": "Log in with Google",
+  "@signInWithGoogle": {
+    "description": "or"
   }
 }

@@ -1,5 +1,7 @@
+import 'package:engelsburg_app/src/constants/api_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/pages/user/oauth_login_page.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +167,7 @@ class _SingUpPageState extends State<SingUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthModel>(context);
+    final authProvider = Provider.of<AuthModel>(context);
     return Scaffold(
       bottomSheet: Column(
         mainAxisSize: MainAxisSize.min,
@@ -190,29 +192,116 @@ class _SingUpPageState extends State<SingUpPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.signUp),
       ),
-      body: Stepper(
-        currentStep: currentStep,
-        onStepContinue: currentStep == steps(auth).length - 1
-            ? null
-            : () {
-                final canGoToStep2 = currentStep == 0
-                    ? _substitutionPlanPasswordFormKey.currentState!.validate()
-                    : true;
+      body: ListView(
+        children: [
+          Stepper(
+            physics: const ClampingScrollPhysics(),
+            currentStep: currentStep,
+            onStepContinue: currentStep == steps(authProvider).length - 1
+                ? null
+                : () {
+                    final canGoToStep2 = currentStep == 0
+                        ? _substitutionPlanPasswordFormKey.currentState!
+                            .validate()
+                        : true;
 
-                if (canGoToStep2) {
-                  setState(() {
-                    currentStep = currentStep + 1;
-                  });
-                }
-              },
-        onStepCancel: currentStep == 0
-            ? null
-            : () {
-                setState(() {
-                  currentStep = currentStep - 1;
-                });
-              },
-        steps: steps(auth),
+                    if (canGoToStep2) {
+                      setState(() {
+                        currentStep = currentStep + 1;
+                      });
+                    }
+                  },
+            onStepCancel: currentStep == 0
+                ? null
+                : () {
+                    setState(() {
+                      currentStep = currentStep - 1;
+                    });
+                  },
+            steps: steps(authProvider),
+          ),
+          if (currentStep == 1)
+            Column(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    AppLocalizations.of(context)!.or,
+                    textScaleFactor: 1.4,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 24),
+                  height: 60,
+                  width: 300,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      foregroundColor: MaterialStateProperty.all(Colors.black),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 1, color: Colors.black),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Image(
+                              image: AssetImage(
+                                  'assets/images/oauth/google_logo.png')),
+                          Container(
+                            padding: EdgeInsets.only(left: 16),
+                            width: 240,
+                            height: 28,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                AppLocalizations.of(context)!.signUpWithGoogle,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onPressed: () async {
+                      final auth = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OauthLoginPage(
+                                  url: ApiConstants
+                                      .engelsburgApiOAuthGoogleLoginUrl,
+                                  schoolToken:
+                                      _schoolTokenTextController.text.trim())));
+
+                      if (auth == null) return;
+                      if (auth is AuthInfoDTO) {
+                        if (auth.validate) {
+                          authProvider.setTokenPair(
+                              accessToken: auth.token!,
+                              refreshToken: auth.refreshToken!);
+                          ApiService.show(
+                              context, AppLocalizations.of(context)!.loggedIn);
+                          Navigator.pop(context);
+                        } else {
+                          ApiService.show(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .unexpectedErrorMessage);
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+        ],
       ),
     );
   }
