@@ -33,7 +33,7 @@ class DatabaseService {
   }) async {
     return (await _db!.query(
       model.tableName(),
-      limit: paging == null ? null : paging.size,
+      limit: paging?.size,
       offset: paging == null ? null : paging.page * paging.size,
       orderBy: orderBy,
       where: where,
@@ -52,7 +52,7 @@ class DatabaseService {
   }) async {
     final ret = (await _db!.query(
       model.tableName(),
-      limit: paging == null ? null : paging.size,
+      limit: paging?.size,
       offset: paging == null ? null : paging.page * paging.size,
       orderBy: orderBy,
       where: where,
@@ -86,9 +86,9 @@ abstract class DatabaseModel {
 
 class Paging {
   //Start -> 0 (First page)
-  int _page;
+  final int _page;
   //Start -> 1
-  int _size;
+  final int _size;
 
   Paging(this._page, this._size);
 

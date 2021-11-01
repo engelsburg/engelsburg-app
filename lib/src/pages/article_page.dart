@@ -100,13 +100,13 @@ class _ArticlePageState extends State<ArticlePage> {
                           context: context,
                           builder: (context) {
                             return Dialog(
-                              insetPadding: EdgeInsets.all(15),
+                              insetPadding: const EdgeInsets.all(15),
                               backgroundColor: Colors.transparent,
                               child: Stack(
                                 clipBehavior: Clip.none,
                                 alignment: Alignment.center,
                                 children: <Widget>[
-                                  Container(
+                                  SizedBox(
                                     width: double.infinity,
                                     height: 500,
                                     child: OctoImage(

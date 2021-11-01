@@ -46,13 +46,13 @@ class _NewsPageState extends State<NewsPage>
           onEndOfPage: () => _loadArticles(false),
           child: RefreshIndicator(
             child: ListView.separated(
-              physics: BouncingScrollPhysics(
+              physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               itemCount: articles.length + 1,
               itemBuilder: (context, index) {
                 if (index == articles.length) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                     heightFactor: 2,
                   );
@@ -79,14 +79,15 @@ class _NewsPageState extends State<NewsPage>
                   await Navigator.pushNamed(context, "/savedArticles");
               if (unsavedArticles is Set<int>) {
                 setState(() {
-                  articles.forEach((article) {
-                    if (unsavedArticles.contains(article.articleId))
+                  for (var article in articles) {
+                    if (unsavedArticles.contains(article.articleId)) {
                       article.saved = false;
-                  });
+                    }
+                  }
                 });
               }
             },
-            child: Icon(Icons.bookmark_outlined),
+            child: const Icon(Icons.bookmark_outlined),
           ),
           bottom: 20,
           right: 20,
@@ -121,13 +122,14 @@ class _NewsPageState extends State<NewsPage>
         .handle<List<Article>>(
       context,
       parse: (json) => Articles.fromJson(json).articles,
-      onSuccess: (articles) {
-        articles!.forEach((newArticle) async {
-          final article = (await DatabaseService.get<Article>(
+      onSuccess: (articles) async {
+        for (var newArticle in articles!) {
+          final article = await DatabaseService.get<Article>(
             Article(),
             where: "articleId=?",
             whereArgs: [newArticle.articleId!],
-          ));
+          );
+
           if (article == null) {
             DatabaseService.insert(newArticle);
           } else {
@@ -137,9 +139,10 @@ class _NewsPageState extends State<NewsPage>
               whereArgs: [article.articleId!],
             );
           }
-        });
+        }
+
         this.articles.insertAll(
-            this.articles.length == 0 ? 0 : this.articles.length - 1, articles);
+            this.articles.isEmpty ? 0 : this.articles.length - 1, articles);
       },
       onError: (error) async {
         articles = (await DatabaseService.getAll<Article>(
@@ -190,7 +193,7 @@ class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
                 if (data.isEmpty) {
                   return Align(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(top: 30),
                       child: Text(
                         AppLocalizations.of(context)!.noArticlesSaved,
                         textScaleFactor: 1.2,
@@ -207,7 +210,7 @@ class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
                 }
 
                 return ListView.separated(
-                  physics: BouncingScrollPhysics(
+                  physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
                   itemCount: data.length,
@@ -227,7 +230,7 @@ class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
                       const Divider(height: 0),
                 );
               }
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }),
       ),
     );

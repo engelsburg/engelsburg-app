@@ -53,6 +53,7 @@ class Article implements DatabaseModel {
       blurHash: json['blurHash'],
       saved: json["saved"] == 1);
 
+  @override
   Map<String, dynamic> toMap() => {
         "articleId": articleId,
         "date": date,

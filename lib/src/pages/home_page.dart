@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.restaurant_menu),
-              title: Text("Cafeteria"),
+              title: const Text("Cafeteria"),
               onTap: () => Navigator.pushNamed(context, "/cafeteria"),
             ),
             ListTile(
@@ -135,19 +135,19 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.grades,
-            icon: Icon(Icons.assessment),
+            icon: const Icon(Icons.assessment),
           ),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.timetable,
-            icon: Icon(Icons.apps_outlined),
+            icon: const Icon(Icons.apps_outlined),
           ),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.tasks,
-            icon: Icon(Icons.assignment),
+            icon: const Icon(Icons.assignment),
           ),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.substitutes,
-            icon: Icon(Icons.dashboard),
+            icon: const Icon(Icons.dashboard),
           ),
         ],
         onTap: (index) {
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
             _handledByNavBar = true;
           });
           globals.pageController!.animateToPage(_currentPage,
-              duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+              duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
         },
       ),
       body: PageView(
@@ -167,10 +167,12 @@ class _HomePageState extends State<HomePage> {
             setState(() => _currentPage = index);
             globals.pageController?.animateToPage(
               _currentPage,
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               curve: Curves.decelerate,
             );
-          } else if (_currentPage == index) _handledByNavBar = false;
+          } else if (_currentPage == index) {
+            _handledByNavBar = false;
+          }
         },
         children: AppConstants.bottomNavigationBarPages,
       ),

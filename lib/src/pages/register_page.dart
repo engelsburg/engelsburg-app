@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   : null,
               controller: _schoolTokenTextController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 labelText: AppLocalizations.of(context)!.substitutesPassword,
               ),
             ),
@@ -63,12 +63,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return AppLocalizations.of(context)!.noPasswordSpecified;
-                    }
-                    if (!value.contains(RegExp(r"[0-9]"))) {
+                    } else if (!value.contains(RegExp(r"[0-9]"))) {
                       return AppLocalizations.of(context)!
                           .passwordMustContainNumber;
-                    }
-                    if (value.length < 8) {
+                    } else if (value.length < 8) {
                       return AppLocalizations.of(context)!.passwordMin8Chars;
                     }
                   },
@@ -175,13 +173,13 @@ class _RegisterPageState extends State<RegisterPage> {
           const Divider(height: 0),
           Row(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Icon(Icons.lock),
               ),
               Flexible(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 8.0, 8.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 8.0, 8.0),
                   child: Text(AppLocalizations.of(context)!.dataDisclaimer),
                 ),
               ),
