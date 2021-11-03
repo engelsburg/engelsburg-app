@@ -48,7 +48,7 @@
   "substitutesPassword": "Passwort für den Vertretungsplan",
   "error": "Fehler",
   "notPermittedError": "Du besitzt nicht die nötige Berechtigung, um dieses Feature zu benutzen!",
-  "needToLoggedInError": "Du musst angemeldet sein, um dieses Featurezu benutzen.",
+  "needToLoggedInError": "Du musst angemeldet sein, um dieses Feature zu benutzen.",
   "needToVerifiedError": "Du musst deine E-Mail verifizieren, um dieses Feature zu benutzen.",
   "networkError": "Keine Internetverbindung! Bitte überprüfe deine Internetverbindung und versuche es erneut.",
   "cafeteriaPageNotFoundError": "Cafeteria-Seite konnte nicht gefunden werden!",
@@ -117,5 +117,12 @@
   "email": "E-Mail",
   "or": "oder",
   "signUpWithGoogle": "Registriere dich mit Google",
-  "signInWithGoogle": "Melde dich mit Google an"
+  "signInWithGoogle": "Melde dich mit Google an",
+  "errorTooManyRequests": "Zu viele Anfragen! Versuche es nochmal ein {sec} Sekunden",
+  "resetPassword": "Passwort zurücksetzen",
+  "code": "Code",
+  "newPassword": "Neues Passwort",
+  "passwordResetRequestEmail": "Eine E-Mail mit einem Code um das Passwort zurückzusetzen wurde versendet.",
+  "passwordResetSuccessful": "Passwort erfolgreich geändert",
+  "emailSuccessfulVerified": "E-Mail erfolgreich verifiziert!"
 }

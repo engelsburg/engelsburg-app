@@ -1,6 +1,7 @@
 import 'package:engelsburg_app/src/constants/api_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_in_request_dto.dart';
+import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/pages/user/oauth_login_page.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
@@ -101,9 +102,7 @@ class _SignInPageState extends State<SignInPage> {
                           parse: (json) => AuthInfoDTO.fromJson(json),
                           onSuccess: (auth) {
                             if (auth!.validate) {
-                              authProvider.setTokenPair(
-                                  accessToken: auth.token!,
-                                  refreshToken: auth.refreshToken!);
+                              authProvider.set(auth);
                               ApiService.show(context,
                                   AppLocalizations.of(context)!.loggedIn);
                               Navigator.pop(context);
@@ -155,7 +154,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 24),
+                    margin: const EdgeInsets.only(top: 24),
                     height: 60,
                     width: 300,
                     child: ElevatedButton(
@@ -182,15 +181,15 @@ class _SignInPageState extends State<SignInPage> {
                                 image: AssetImage(
                                     'assets/images/oauth/google_logo.png')),
                             Container(
-                              padding: EdgeInsets.only(left: 16),
+                              padding: const EdgeInsets.only(left: 16),
                               width: 240,
                               height: 28,
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   AppLocalizations.of(context)!
-                                      .signUpWithGoogle,
-                                  style: TextStyle(fontSize: 18),
+                                      .signInWithGoogle,
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ),
                             ),
@@ -204,22 +203,34 @@ class _SignInPageState extends State<SignInPage> {
                                 builder: (context) => const OauthLoginPage(
                                     url: ApiConstants
                                         .engelsburgApiOAuthGoogleLoginUrl)));
-
                         if (auth == null) return;
-                        if (auth is AuthInfoDTO) {
-                          if (auth.validate) {
-                            authProvider.setTokenPair(
-                                accessToken: auth.token!,
-                                refreshToken: auth.refreshToken!);
-                            ApiService.show(context,
-                                AppLocalizations.of(context)!.loggedIn);
-                            Navigator.pop(context);
-                          } else {
-                            ApiService.show(
-                                context,
-                                AppLocalizations.of(context)!
-                                    .unexpectedErrorMessage);
-                          }
+                        if (auth is Result) {
+                          auth.handle<AuthInfoDTO>(
+                            context,
+                            parse: (json) => AuthInfoDTO.fromJson(json),
+                            onError: (error) {
+                              if (error.isNotFound && error.extra == 'user') {
+                                ApiService.show(context,
+                                    AppLocalizations.of(context)!.userNotFound);
+                                return;
+                              }
+                            },
+                            onSuccess: (auth) {
+                              if (auth!.validate) {
+                                authProvider.set(auth);
+                                ApiService.show(context,
+                                    AppLocalizations.of(context)!.loggedIn);
+                                Navigator.pop(context);
+                                return;
+                              }
+                            },
+                          );
+                        } else {
+                          ApiService.show(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .unexpectedErrorMessage);
+                          Navigator.pop(context);
                         }
                       },
                     ),

@@ -99,7 +99,7 @@ class Locked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthModel auth = context.read<AuthModel>();
+    AuthModel auth = context.watch<AuthModel>();
     final key = GlobalKey<State<Tooltip>>();
 
     if (!auth.isLoggedIn || (!auth.isVerified && enforceVerified)) {

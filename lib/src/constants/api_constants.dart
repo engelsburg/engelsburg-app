@@ -3,7 +3,7 @@ class ApiConstants {
     'Content-Type': 'application/json; charset=utf-8',
     'Accept': 'application/json; charset=utf-8'
   };
-  static const engelsburgApiBaseUrl = 'https://engelsburg-api.de';
+  static const engelsburgApiBaseUrl = 'http://10.0.2.2:8080';
   static const engelsburgApiEventsUrl = engelsburgApiBaseUrl + '/event';
   static const engelsburgApiArticlesUrl = engelsburgApiBaseUrl + '/article';
   static const engelsburgApiCafeteriaUrl = engelsburgApiBaseUrl + '/cafeteria';
@@ -22,4 +22,10 @@ class ApiConstants {
       engelsburgApiBaseUrl + "/auth/oauth";
   static const engelsburgApiOAuthGoogleLoginUrl =
       engelsburgApiOAuthLoginUrl + "/google";
+  static const engelsburgApiVerifyEmailUrl =
+      engelsburgApiBaseUrl + "/auth/verify";
+  static const engelsburgApiResetPasswordUrl =
+      engelsburgApiBaseUrl + "/auth/reset_password";
+  static const engelsburgApiRequestPasswordResetUrl =
+      engelsburgApiBaseUrl + "/auth/request_reset_password";
 }

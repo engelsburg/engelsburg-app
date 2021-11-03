@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
+import 'package:engelsburg_app/src/widgets/error_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +52,7 @@ class _AccountPageState extends State<AccountPage> {
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                "example.user@email.com", //TODO: Replace with email of user
+                                auth.email ?? " ",
                                 style: TextStyle(fontSize: 24),
                               ),
                             ),
@@ -89,15 +90,21 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                   if (!auth.isVerified)
                     ListTile(
-                      onTap:
-                          null, //TODO: Navigate to verify email if it hasn't been verified yet
+                      onTap: () =>
+                          Navigator.pushNamed(context, "/account/verifyEmail"),
                       leading: const Icon(Icons.email),
                       title: Text(AppLocalizations.of(context)!.verifyEmail),
                     ),
                 ],
               ),
             ),
-            const Divider(height: 0, thickness: 3),
+            const Divider(height: 10, thickness: 3),
+            ListTile(
+              leading: const Icon(Icons.vpn_key),
+              title: Text(AppLocalizations.of(context)!.resetPassword),
+              onTap: () =>
+                  Navigator.pushNamed(context, "/account/resetPassword"),
+            ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: Text(AppLocalizations.of(context)!.logout),
@@ -137,21 +144,8 @@ class AccountAdvancedPage extends StatelessWidget {
             leading: const Icon(Icons.analytics_outlined),
             title: Text(AppLocalizations.of(context)!.requestAccountData),
             onTap: () async {
-              (await ApiService.accountData(context))
-                  .handle<Map<String, dynamic>>(
-                context,
-                parse: (json) => Result.keepJson(json),
-                onSuccess: (data) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AccountData(json: data!)));
-                },
-                onError: (error) {
-                  ApiService.show(context,
-                      AppLocalizations.of(context)!.unexpectedErrorMessage);
-                },
-              );
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AccountData()));
             },
           ),
           Container(
@@ -210,15 +204,23 @@ class AccountAdvancedPage extends StatelessWidget {
   }
 }
 
-class AccountData extends StatelessWidget {
-  const AccountData({Key? key, required this.json}) : super(key: key);
+class AccountData extends StatefulWidget {
+  const AccountData({Key? key}) : super(key: key);
 
-  final Map<String, dynamic> json;
   static const encoder = JsonEncoder.withIndent('  ');
 
   @override
+  State<AccountData> createState() => _AccountDataState();
+}
+
+class _AccountDataState extends State<AccountData>
+    with AutomaticKeepAliveClientMixin<AccountData> {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
-    var prettyString = encoder.convert(json);
+    var prettyString = "";
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.accountData),
@@ -232,7 +234,28 @@ class AccountData extends StatelessWidget {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Text(prettyString),
+          child: FutureBuilder<Result>(
+            future: ApiService.accountData(context),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!.build<Map<String, dynamic>>(
+                  context,
+                  parse: (json) => Result.keepJson(json),
+                  onSuccess: (json) {
+                    print(json);
+                    prettyString = AccountData.encoder.convert(json);
+
+                    return Text(prettyString);
+                  },
+                  onError: (error) {
+                    return const ErrorBox();
+                  },
+                );
+              }
+
+              return const CircularProgressIndicator();
+            },
+          ),
         ),
       ),
     );

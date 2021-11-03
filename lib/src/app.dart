@@ -12,8 +12,10 @@ import 'package:engelsburg_app/src/pages/settings/theme_settings_page.dart';
 import 'package:engelsburg_app/src/pages/solar_panel_page.dart';
 import 'package:engelsburg_app/src/pages/substitutes_page.dart';
 import 'package:engelsburg_app/src/pages/user/account_page.dart';
+import 'package:engelsburg_app/src/pages/user/reset_password_page.dart';
 import 'package:engelsburg_app/src/pages/user/sign_in_page.dart';
-import 'package:engelsburg_app/src/pages/user/sing_up_page.dart';
+import 'package:engelsburg_app/src/pages/user/sign_up_page.dart';
+import 'package:engelsburg_app/src/pages/user/verify_email_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,6 +32,7 @@ class EngelsburgApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context)!.appTitle,
       localizationsDelegates: const [
@@ -65,10 +68,12 @@ class EngelsburgApp extends StatelessWidget {
         "/settings/theme": (context) => const ThemeSettingsPage(),
         "/settings/notifications": (context) =>
             const NotificationSettingsPage(),
-        "/signUp": (context) => const SingUpPage(),
+        "/signUp": (context) => const SignUpPage(),
         "/signIn": (context) => const SignInPage(),
         "/account": (context) => const AccountPage(),
         "/account/advanced": (context) => const AccountAdvancedPage(),
+        "/account/resetPassword": (context) => const ResetPasswordPage(),
+        "/account/verifyEmail": (context) => const VerifyEmailPage(),
         "/solarPanel": (context) => const SolarPanelPage(),
         "/events": (context) => EventsPage(),
         "/settings": (context) => const SettingsPage(),

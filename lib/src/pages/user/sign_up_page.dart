@@ -1,6 +1,7 @@
 import 'package:engelsburg_app/src/constants/api_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/pages/user/oauth_login_page.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:engelsburg_app/src/services/api_service.dart';
@@ -8,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class SingUpPage extends StatefulWidget {
-  const SingUpPage({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  _SingUpPageState createState() => _SingUpPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SingUpPageState extends State<SingUpPage> {
+class _SignUpPageState extends State<SignUpPage> {
   static final _substitutionPlanPasswordFormKey = GlobalKey<FormState>();
   static final _emailAndPasswordFormKey = GlobalKey<FormState>();
   static var currentStep = 0;
@@ -117,9 +118,7 @@ class _SingUpPageState extends State<SingUpPage> {
                       parse: (json) => AuthInfoDTO.fromJson(json),
                       onSuccess: (auth) {
                         if (auth!.validate) {
-                          authProvider.setTokenPair(
-                              accessToken: auth.token!,
-                              refreshToken: auth.refreshToken!);
+                          authProvider.set(auth);
                           ApiService.show(
                               context, AppLocalizations.of(context)!.loggedIn);
                           Navigator.pop(context);
@@ -231,7 +230,7 @@ class _SingUpPageState extends State<SingUpPage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 24),
+                  margin: const EdgeInsets.only(top: 24),
                   height: 60,
                   width: 300,
                   child: ElevatedButton(
@@ -256,14 +255,14 @@ class _SingUpPageState extends State<SingUpPage> {
                               image: AssetImage(
                                   'assets/images/oauth/google_logo.png')),
                           Container(
-                            padding: EdgeInsets.only(left: 16),
+                            padding: const EdgeInsets.only(left: 16),
                             width: 240,
                             height: 28,
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 AppLocalizations.of(context)!.signUpWithGoogle,
-                                style: TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 18),
                               ),
                             ),
                           ),
@@ -281,20 +280,37 @@ class _SingUpPageState extends State<SingUpPage> {
                                       _schoolTokenTextController.text.trim())));
 
                       if (auth == null) return;
-                      if (auth is AuthInfoDTO) {
-                        if (auth.validate) {
-                          authProvider.setTokenPair(
-                              accessToken: auth.token!,
-                              refreshToken: auth.refreshToken!);
-                          ApiService.show(
-                              context, AppLocalizations.of(context)!.loggedIn);
-                          Navigator.pop(context);
-                        } else {
-                          ApiService.show(
-                              context,
-                              AppLocalizations.of(context)!
-                                  .unexpectedErrorMessage);
-                        }
+                      if (auth is Result) {
+                        auth.handle<AuthInfoDTO>(
+                          context,
+                          parse: (json) => AuthInfoDTO.fromJson(json),
+                          onError: (error) {
+                            if (error.isForbidden &&
+                                error.extra == 'school_token') {
+                              ApiService.show(
+                                  context,
+                                  AppLocalizations.of(context)!
+                                      .wrongSubstituteKeyError);
+                              setState(() => currentStep = 0);
+                              return;
+                            }
+                          },
+                          onSuccess: (auth) {
+                            if (auth!.validate) {
+                              authProvider.set(auth);
+                              ApiService.show(context,
+                                  AppLocalizations.of(context)!.loggedIn);
+                              Navigator.pop(context);
+                              return;
+                            }
+                          },
+                        );
+                      } else {
+                        ApiService.show(
+                            context,
+                            AppLocalizations.of(context)!
+                                .unexpectedErrorMessage);
+                        Navigator.pop(context);
                       }
                     },
                   ),

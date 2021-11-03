@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -37,10 +37,9 @@ class OauthLoginPage extends StatelessWidget {
           String? html = await webController?.evaluateJavascript(
               "window.document.getElementsByTagName('body')[0].innerHTML;");
           if (html != null) {
-            html = HtmlUtil.unescape(html)
-                .replaceAll("\\", "")
-                .substring(html.indexOf("{"), html.lastIndexOf("}") + 1);
-            Navigator.pop(context, AuthInfoDTO.fromJson(jsonDecode(html)));
+            html = HtmlUtil.unescape(html).replaceAll("\\", "");
+            html = html.substring(html.indexOf("{"), html.lastIndexOf("}") + 1);
+            Navigator.pop(context, Result.of(jsonDecode(html)));
           }
         }
       },

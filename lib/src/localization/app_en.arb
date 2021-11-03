@@ -473,6 +473,34 @@
   },
   "signInWithGoogle": "Log in with Google",
   "@signInWithGoogle": {
-    "description": "or"
+    "description": "Log in with Google"
+  },
+  "errorTooManyRequests": "You send too many requests! Try again in {sec} seconds",
+  "@errorTooManyRequests": {
+    "description": "Too many requests"
+  },
+  "resetPassword": "Reset password",
+  "@resetPassword": {
+    "description": "Reset password"
+  },
+  "code": "Code",
+  "@code": {
+    "description": "Code"
+  },
+  "newPassword": "New password",
+  "@newPassword": {
+    "description": "New password"
+  },
+  "passwordResetRequestEmail": "An email with a code to reset your password was sent.",
+  "@passwordResetRequestEmail": {
+    "description": "Email to reset password was sent"
+  },
+  "passwordResetSuccessful": "Password successfully reset",
+  "@passwordResetSuccessful": {
+    "description": "Password successfully reset"
+  },
+  "emailSuccessfulVerified": "Email was successful verified",
+  "@emailSuccessfulVerified": {
+    "description": "Email was successful verified"
   }
 }
