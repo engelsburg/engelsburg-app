@@ -75,12 +75,12 @@ class _LockedScreenState extends State<LockedScreen>
           ),
           Container(height: 10),
           OutlinedButton(
-            onPressed: () => Navigator.pushNamed(context, "/register"),
+            onPressed: () => Navigator.pushNamed(context, "/signUp"),
             style: ButtonStyle(
               fixedSize: MaterialStateProperty.all<Size>(const Size(200, 40)),
             ),
             child: Center(
-              child: Text(AppLocalizations.of(context)!.register),
+              child: Text(AppLocalizations.of(context)!.signUp),
             ),
           ),
         ],
@@ -99,7 +99,7 @@ class Locked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthModel auth = context.read<AuthModel>();
+    AuthModel auth = context.watch<AuthModel>();
     final key = GlobalKey<State<Tooltip>>();
 
     if (!auth.isLoggedIn || (!auth.isVerified && enforceVerified)) {

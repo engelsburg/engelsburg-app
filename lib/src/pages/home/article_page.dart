@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/articles.dart';
-import 'package:engelsburg_app/src/pages/news_page.dart';
+import 'package:engelsburg_app/src/pages/home/news_page.dart';
 import 'package:engelsburg_app/src/utils/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

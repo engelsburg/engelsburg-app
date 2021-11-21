@@ -54,7 +54,14 @@ class _HomePageState extends State<HomePage> {
             ),
             Consumer<AuthModel>(
               builder: (context, auth, child) => auth.isLoggedIn
-                  ? Container()
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: ListTile(
+                        leading: const Icon(Icons.account_circle_outlined),
+                        title: Text("Account"),
+                        onTap: () => Navigator.pushNamed(context, "/account"),
+                      ),
+                    )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -67,33 +74,45 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.only(
+                              left: 16, top: 8, right: 16),
                           child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, "/register");
+                                Navigator.pushNamed(context, "/signUp");
                               },
                               child:
-                                  Text(AppLocalizations.of(context)!.singIn)),
+                                  Text(AppLocalizations.of(context)!.signUp)),
                         ),
-                        const Divider(height: 0),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, bottom: 16, right: 16),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, "/signIn");
+                              },
+                              child:
+                                  Text(AppLocalizations.of(context)!.signIn)),
+                        ),
                       ],
                     ),
             ),
+            const Divider(height: 0),
             ListTile(
               leading: const Icon(Icons.restaurant_menu),
               title: const Text("Cafeteria"),
               onTap: () => Navigator.pushNamed(context, "/cafeteria"),
             ),
             ListTile(
-              leading: const Icon(Icons.wb_sunny),
-              title: Text(AppLocalizations.of(context)!.solarPanelData),
-              onTap: () => Navigator.pushNamed(context, "/solarPanel"),
-            ),
-            ListTile(
               leading: const Icon(Icons.watch_later),
               title: Text(AppLocalizations.of(context)!.events),
               onTap: () => Navigator.pushNamed(context, "/events"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.wb_sunny),
+              title: Text(AppLocalizations.of(context)!.solarPanelData),
+              onTap: () => Navigator.pushNamed(context, "/solarPanel"),
             ),
             const Divider(height: 0),
             ListTile(

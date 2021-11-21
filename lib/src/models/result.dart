@@ -64,6 +64,9 @@ class Result {
       } else if (error!.status == 403) {
         ApiService.show(
             context, AppLocalizations.of(context)!.notPermittedError);
+      } else if (error!.status == 429) {
+        ApiService.show(
+            context, AppLocalizations.of(context)!.errorTooManyRequests);
       }
     }
   }
@@ -98,6 +101,9 @@ class Result {
             text: AppLocalizations.of(context)!.needToLoggedInError);
       } else if (error!.status == 403) {
         return ErrorBox(text: AppLocalizations.of(context)!.notPermittedError);
+      } else if (error!.status == 429) {
+        return ErrorBox(
+            text: AppLocalizations.of(context)!.errorTooManyRequests);
       }
     }
 
@@ -138,4 +144,9 @@ class ApiError {
   bool get isAlreadyExisting => status == 409 && messageKey == 'ALREADY_EXISTS';
   bool get isExpiredAccessToken =>
       status == 400 && messageKey == 'EXPIRED' && extra == 'token';
+
+  @override
+  String toString() {
+    return 'ApiError{status: $status, messageKey: $messageKey, extra: $extra}';
+  }
 }

@@ -51,7 +51,7 @@ class Substitute {
   factory Substitute.fromJson(Map<String, dynamic> json) => Substitute(
         date: DateTime.parse(json["date"]),
         className: json["className"],
-        lesson: int.parse(json["lesson"]),
+        lesson: json["lesson"],
         subject: json["subject"],
         substituteTeacher: json["substituteTeacher"],
         teacher: json["teacher"],

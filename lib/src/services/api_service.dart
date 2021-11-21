@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:engelsburg_app/src/constants/api_constants.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/reset_password_dto.dart';
+import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_in_request_dto.dart';
 import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/provider/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -96,24 +99,7 @@ class ApiService {
     if (result.errorPresent() &&
         result.error!.isExpiredAccessToken &&
         auth.isLoggedIn) {
-      final refreshTokenUri = Uri.parse(
-        ApiConstants.engelsburgApiRefreshUrl +
-            "?refreshToken=" +
-            auth.refreshToken!,
-      );
-      (await request(context, uri: refreshTokenUri, method: HttpMethod.get))
-          .handle<AuthInfoDTO>(
-        context,
-        parse: (json) => AuthInfoDTO.fromJson(json),
-        onSuccess: (dto) {
-          if (dto!.validate) {
-            auth.setTokenPair(
-              accessToken: dto.token!,
-              refreshToken: dto.refreshToken!,
-            );
-          }
-        },
-      );
+      refreshJWT(context, auth);
       if (headers != null && auth.isLoggedIn) {
         headers.update('Authorization', (value) => auth.accessToken!);
       }
@@ -128,6 +114,33 @@ class ApiService {
     }
 
     return result;
+  }
+
+  static void requestRelogin(BuildContext context, AuthModel auth) {
+    show(context, AppLocalizations.of(context)!.unexpectedErrorMessage);
+    auth.clear();
+    Navigator.pushNamed(context, "/");
+  }
+
+  static void refreshJWT(BuildContext context, AuthModel auth) async {
+    final refreshTokenUri = Uri.parse(
+      ApiConstants.engelsburgApiRefreshUrl +
+          "?refreshToken=" +
+          auth.refreshToken!,
+    );
+    (await request(context, uri: refreshTokenUri, method: HttpMethod.get))
+        .handle<AuthInfoDTO>(
+      context,
+      parse: (json) => AuthInfoDTO.fromJson(json),
+      onError: (error) {
+        requestRelogin(context, auth);
+      },
+      onSuccess: (dto) {
+        if (dto != null && dto.validate) {
+          auth.set(dto);
+        }
+      },
+    );
   }
 
   static void show(BuildContext context, String msg) {
@@ -197,6 +210,20 @@ class ApiService {
     required SignUpRequestDTO dto,
   }) async {
     final uri = Uri.parse(ApiConstants.engelsburgApiSignUpUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.post,
+      body: dto,
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
+  }
+
+  static Future<Result> signIn(
+    BuildContext context, {
+    required SignInRequestDTO dto,
+  }) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiSignInUrl);
     return await request(
       context,
       uri: uri,
@@ -285,6 +312,63 @@ class ApiService {
       headers: authenticatedEngelsburgApiHeaders(context),
     );
   }
+
+  static Future<Result> accountData(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiUserDataUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.get,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> deleteAccount(BuildContext context) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiUserDataUrl);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.delete,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> verifyEmail(BuildContext context, String token) async {
+    final uri =
+        Uri.parse(ApiConstants.engelsburgApiVerifyEmailUrl + "/" + token);
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.patch,
+      headers: authenticatedEngelsburgApiHeaders(context),
+    );
+  }
+
+  static Future<Result> requestPasswordReset(
+      BuildContext context, String email) async {
+    final uri = Uri.parse(
+      ApiConstants.engelsburgApiRequestPasswordResetUrl +
+          Query.email(email).get(),
+    );
+    return await request(
+      context,
+      uri: uri,
+      method: HttpMethod.post,
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
+  }
+
+  static Future<Result> resetPassword(
+      BuildContext context, ResetPasswordDTO dto) async {
+    final uri = Uri.parse(ApiConstants.engelsburgApiResetPasswordUrl);
+    return await request(
+      context,
+      uri: uri,
+      body: dto,
+      method: HttpMethod.patch,
+      headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
+  }
 }
 
 class Query {
@@ -300,6 +384,12 @@ class Query {
   Query.date(num date) {
     _query = {
       "date": date,
+    };
+  }
+
+  Query.email(String email) {
+    _query = {
+      "email": email,
     };
   }
 

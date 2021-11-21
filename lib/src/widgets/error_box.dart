@@ -21,12 +21,17 @@ class ErrorBox extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Text(AppLocalizations.of(context)!.error.toUpperCase() + ':',
-                  textScaleFactor: 1.3),
+              Text(
+                AppLocalizations.of(context)!.error.toUpperCase() + ':',
+                textScaleFactor: 1.3,
+                textAlign: TextAlign.center,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Text(text ??
-                    AppLocalizations.of(context)!.unexpectedErrorMessage),
+                child: Text(
+                  text ?? AppLocalizations.of(context)!.unexpectedErrorMessage,
+                  textAlign: TextAlign.center,
+                ),
               )
             ],
             mainAxisSize: MainAxisSize.min,
