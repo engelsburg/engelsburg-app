@@ -1,4 +1,5 @@
 import 'package:engelsburg_app/src/provider/substitute.dart';
+import 'package:engelsburg_app/src/services/notification_service.dart';
 import 'package:engelsburg_app/src/widgets/switch_expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -63,6 +64,8 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                             onDeleted: () {
                               final classes = settings.classes;
                               classes.remove(e);
+                              NotificationService.remove(
+                                  NotificationType.classNotification, e);
                               settings.setClasses(classes);
                             },
                           );
@@ -78,6 +81,8 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                       final classes = settings.classes;
                       if (!classes.contains(text)) classes.add(text);
                       settings.setClasses(classes);
+                      NotificationService.add(
+                          NotificationType.classNotification, text);
                       classController.clear();
                     },
                     decoration: InputDecoration(
@@ -130,6 +135,8 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                             onDeleted: () {
                               final teacher = settings.teacher;
                               teacher.remove(e);
+                              NotificationService.remove(
+                                  NotificationType.teacherNotification, e);
                               settings.setTeacher(teacher);
                             },
                           );
@@ -145,6 +152,8 @@ class _SubstitutesSettingsPageState extends State<SubstitutesSettingsPage> {
                       final teacher = settings.teacher;
                       if (!teacher.contains(text)) teacher.add(text);
                       settings.setTeacher(teacher);
+                      NotificationService.add(
+                          NotificationType.teacherNotification, text);
                       teacherController.clear();
                     },
                     decoration: InputDecoration(
