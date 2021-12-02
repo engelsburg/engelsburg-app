@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:engelsburg_app/src/services/api_service.dart';
-import 'package:engelsburg_app/src/widgets/error_box.dart';
+import 'package:engelsburg_app/src/view/widgets/error_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -117,6 +117,19 @@ class ApiError {
   final String extra;
 
   ApiError({required this.status, this.messageKey = '', this.extra = ''});
+
+  void log() {
+    print("-------------------");
+    print("Api Error occurred!");
+    print("- Status: " + status.toString());
+    if (messageKey.isNotEmpty) {
+      print("- MessageKey: " + messageKey.toString());
+    }
+    if (extra.isNotEmpty) {
+      print("- Extra: " + extra.toString());
+    }
+    print("-------------------");
+  }
 
   factory ApiError.tryDecode(Response response) {
     try {

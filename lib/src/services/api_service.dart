@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:engelsburg_app/src/constants/api_constants.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/dto/auth_info_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/dto/reset_password_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_in_request_dto.dart';
-import 'package:engelsburg_app/src/models/engelsburg_api/dto/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/models/api/dto/auth_info_dto.dart';
+import 'package:engelsburg_app/src/models/api/dto/reset_password_dto.dart';
+import 'package:engelsburg_app/src/models/api/dto/sign_in_request_dto.dart';
+import 'package:engelsburg_app/src/models/api/dto/sign_up_request_dto.dart';
+import 'package:engelsburg_app/src/models/provider/auth.dart';
 import 'package:engelsburg_app/src/models/result.dart';
-import 'package:engelsburg_app/src/provider/auth.dart';
+import 'package:engelsburg_app/src/utils/constants/api_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -60,6 +60,29 @@ class ApiService {
             res.body.isEmpty ? Result.empty() : Result.of(jsonDecode(res.body));
       }
 
+      if (result.resultPresent()) print("SUCCESS: " + uri.toString());
+      result.error?.log();
+
+      //If access token is expired
+      AuthModel auth = context.read<AuthModel>();
+      if (result.errorPresent() &&
+          result.error!.isExpiredAccessToken &&
+          auth.isLoggedIn) {
+        print("RefreshToken: " + (auth.refreshToken ?? ""));
+        refreshJWT(context, auth);
+        if (headers != null && auth.isLoggedIn) {
+          headers.update('Authorization', (value) => auth.accessToken!);
+        }
+        return request(
+          context,
+          uri: uri,
+          method: method,
+          cacheKey: cacheKey,
+          body: body,
+          headers: headers,
+        );
+      }
+
       if (result.errorPresent()) {
         //Check for not modified
         if (cacheKey != null) {
@@ -94,25 +117,6 @@ class ApiService {
       }
     }
 
-    //If access token is expired
-    AuthModel auth = context.read<AuthModel>();
-    if (result.errorPresent() &&
-        result.error!.isExpiredAccessToken &&
-        auth.isLoggedIn) {
-      refreshJWT(context, auth);
-      if (headers != null && auth.isLoggedIn) {
-        headers.update('Authorization', (value) => auth.accessToken!);
-      }
-      return request(
-        context,
-        uri: uri,
-        method: method,
-        cacheKey: cacheKey,
-        body: body,
-        headers: headers,
-      );
-    }
-
     return result;
   }
 
@@ -133,6 +137,7 @@ class ApiService {
       context,
       parse: (json) => AuthInfoDTO.fromJson(json),
       onError: (error) {
+        error.log();
         requestRelogin(context, auth);
       },
       onSuccess: (dto) {
@@ -153,6 +158,7 @@ class ApiService {
     if (!auth.isLoggedIn) {
       return ApiConstants.unauthenticatedEngelsburgApiHeaders;
     }
+    print("AccessToken: " + auth.accessToken!);
 
     return {
       "Authorization": auth.accessToken!,

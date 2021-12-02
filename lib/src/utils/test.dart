@@ -1,4 +1,4 @@
-import 'package:engelsburg_app/src/models/engelsburg_api/substitutes.dart';
+import 'package:engelsburg_app/src/models/api/substitutes.dart';
 
 ///Class for test objects
 class Test {
