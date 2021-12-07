@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:engelsburg_app/src/services/api_service.dart';
-import 'package:engelsburg_app/src/widgets/error_box.dart';
+import 'package:engelsburg_app/src/view/widgets/error_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,10 +33,10 @@ class Result {
 
   static keepJson(Map<String, dynamic> json) => json;
 
-  void handle<T>(BuildContext context,
+  Future<void> handle<T>(BuildContext context,
       {T Function(Map<String, dynamic>)? parse,
-      void Function(T?)? onSuccess,
-      void Function(ApiError)? onError}) {
+      Future<void>? Function(T?)? onSuccess,
+      Future<void>? Function(ApiError)? onError}) async {
     if (errorPresent() && onError != null) {
       //If error occurred
       onError(error!);
@@ -44,10 +44,10 @@ class Result {
     } else if (onSuccess != null) {
       if (resultPresent() && parse != null) {
         //If result present and valid parse function specified
-        onSuccess(parse(result!));
+        await onSuccess(parse(result!));
       } else {
         //Empty result or no parse function
-        onSuccess(null);
+        await onSuccess(null);
       }
     }
   }
@@ -117,6 +117,19 @@ class ApiError {
   final String extra;
 
   ApiError({required this.status, this.messageKey = '', this.extra = ''});
+
+  void log() {
+    print("-------------------");
+    print("Api Error occurred!");
+    print("- Status: " + status.toString());
+    if (messageKey.isNotEmpty) {
+      print("- MessageKey: " + messageKey.toString());
+    }
+    if (extra.isNotEmpty) {
+      print("- Extra: " + extra.toString());
+    }
+    print("-------------------");
+  }
 
   factory ApiError.tryDecode(Response response) {
     try {
