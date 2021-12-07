@@ -7,6 +7,9 @@ import 'package:flutter/cupertino.dart';
 class SubstituteController {
   final List<SubstituteDTO> _substitutes = [];
   final List<SubstituteMessage> _substituteMessages = [];
+  final void Function(VoidCallback callback) setStateCallback;
+
+  SubstituteController({required this.setStateCallback});
 
   List<SubstituteDTO> get substitutes => _substitutes;
   List<SubstituteMessage> get substituteMessages => _substituteMessages;
@@ -14,10 +17,10 @@ class SubstituteController {
   Future<void> updateSubstitutes(
       BuildContext context, SubstituteSettings settings) async {
     _substitutes.clear();
-    List<Substitute> fetchedSubstitutes = <Substitute>[];
+    List<Substitute> substitutes = <Substitute>[];
 
     if (settings.isByClass || settings.isByTeacher || settings.isByTimetable) {
-      Set<Substitute> substitutes = {};
+      Set<Substitute> substituteSet = {};
 
       if (settings.isByClass && settings.classes.isNotEmpty) {
         for (var value in settings.classes) {
@@ -27,7 +30,7 @@ class SubstituteController {
             parse: (json) => Substitutes.fromJson(json),
             onSuccess: (fetchedSubstitutes) {
               if (fetchedSubstitutes != null) {
-                substitutes.addAll(fetchedSubstitutes.substitutes);
+                substituteSet.addAll(fetchedSubstitutes.substitutes);
               }
             },
           );
@@ -42,7 +45,7 @@ class SubstituteController {
             parse: (json) => Substitutes.fromJson(json),
             onSuccess: (fetchedSubstitutes) {
               if (fetchedSubstitutes != null) {
-                substitutes.addAll(fetchedSubstitutes.substitutes);
+                substituteSet.addAll(fetchedSubstitutes.substitutes);
               }
             },
           );
@@ -54,7 +57,7 @@ class SubstituteController {
             parse: (json) => Substitutes.fromJson(json),
             onSuccess: (fetchedSubstitutes) {
               if (fetchedSubstitutes != null) {
-                substitutes.addAll(fetchedSubstitutes.substitutes);
+                substituteSet.addAll(fetchedSubstitutes.substitutes);
               }
             },
           );
@@ -65,26 +68,26 @@ class SubstituteController {
         //TODO access database, parse timetable to dto, send request
       }
 
-      fetchedSubstitutes.addAll(substitutes.toList());
+      substitutes.addAll(substituteSet.toList());
     } else {
       (await ApiService.substitutes(context)).handle<Substitutes>(
         context,
         parse: (json) => Substitutes.fromJson(json),
-        onSuccess: (substitutes) {
-          if (substitutes != null) {
-            fetchedSubstitutes.addAll(substitutes.substitutes);
+        onSuccess: (fetchedSubstitutes) {
+          if (fetchedSubstitutes != null) {
+            substitutes.addAll(fetchedSubstitutes.substitutes);
           }
         },
       );
     }
 
-    for (var i = 0; i < fetchedSubstitutes.length; i++) {
+    for (var i = 0; i < substitutes.length; i++) {
       List<int> same = [];
       int low = 0, high = 0;
-      var sub = fetchedSubstitutes[i];
-      for (var ii = 0; ii < fetchedSubstitutes.length; ii++) {
+      var sub = substitutes[i];
+      for (var ii = 0; ii < substitutes.length; ii++) {
         if (ii != i) {
-          var compare = fetchedSubstitutes[ii];
+          var compare = substitutes[ii];
           if (sub.date == compare.date &&
               sub.className == compare.className &&
               sub.teacher == compare.teacher &&
@@ -107,11 +110,11 @@ class SubstituteController {
       }
       if (same.isNotEmpty) {
         _substitutes.add(SubstituteDTO.fromSubstitute(
-          fetchedSubstitutes[same.last],
+          substitutes[same.last],
           lesson: "$low - $high",
         ));
         for (var element in same) {
-          fetchedSubstitutes.removeAt(element);
+          substitutes.removeAt(element);
         }
       } else {
         _substitutes.add(SubstituteDTO.fromSubstitute(sub));
@@ -119,6 +122,7 @@ class SubstituteController {
     }
 
     _substitutes.sort(SubstituteDTO.compare);
+    setStateCallback(() {});
   }
 
   Future<void> updateSubstituteMessages(BuildContext context) async {
@@ -132,5 +136,6 @@ class SubstituteController {
         }
       },
     );
+    setStateCallback(() {});
   }
 }

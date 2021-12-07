@@ -38,7 +38,7 @@ class _ArticlePageState extends State<ArticlePage> {
               onPressed: () {
                 setState(() {
                   ArticleController.updateArticleSaved(
-                      widget.article, !widget.article.saved);
+                      context, widget.article, !widget.article.saved, true);
                 });
               },
               icon: Icon(

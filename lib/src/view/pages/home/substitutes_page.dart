@@ -29,7 +29,7 @@ class _SubstitutesPageState extends State<SubstitutesPage>
     _tabController =
         TabController(initialIndex: tabIndex, length: 2, vsync: this);
     _pageController = PageController(initialPage: tabIndex);
-    _substituteController = SubstituteController();
+    _substituteController = SubstituteController(setStateCallback: setState);
 
     if (context.read<AuthModel>().isLoggedIn) {
       _substituteController.updateSubstitutes(

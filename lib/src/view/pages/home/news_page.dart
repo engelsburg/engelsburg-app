@@ -27,7 +27,7 @@ class _NewsPageState extends State<NewsPage>
     super.initState();
     articleController = ArticleController(
       setStateCallback: setState,
-      offset: 50,
+      offset: 150,
     );
     articleController.init(context);
   }
@@ -46,26 +46,34 @@ class _NewsPageState extends State<NewsPage>
     return Stack(
       children: [
         RefreshIndicator(
-            child: ListView.separated(
-              controller: articleController.scrollController,
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              itemCount: articles.length,
-              itemBuilder: (context, index) {
-                return ArticleCard(
-                    article: articles[index],
-                    onSavedPressed: _onSavedPressed,
-                    afterPop: (saved) {
-                      articles[index].saved = saved;
-                      setState(() {});
-                    });
-              },
-              separatorBuilder: (context, index) => const Divider(height: 0),
+          child: ListView.separated(
+            controller: articleController.scrollController,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
-            onRefresh: () async {
-              await articleController.refresh(context);
-            }),
+            itemCount: articles.length,
+            itemBuilder: (context, index) {
+              if (articles.length - 1 == index) {
+                articleController.builtAllArticles = true;
+              }
+              return ArticleCard(
+                  article: articles[index],
+                  onSavedPressed: (article) {
+                    ArticleController.updateArticleSaved(
+                        context, article, !article.saved, true);
+                    setState(() {});
+                  },
+                  afterPop: (saved) {
+                    articles[index].saved = saved;
+                    setState(() {});
+                  });
+            },
+            separatorBuilder: (context, index) => const Divider(height: 0),
+          ),
+          onRefresh: () async {
+            await articleController.refresh(context);
+          },
+        ),
         Positioned(
           child: FloatingActionButton(
             onPressed: () async {
@@ -88,12 +96,6 @@ class _NewsPageState extends State<NewsPage>
         ),
       ],
     );
-  }
-
-  void _onSavedPressed(Article article) {
-    setState(() {
-      ArticleController.updateArticleSaved(article, !article.saved);
-    });
   }
 }
 
@@ -157,7 +159,8 @@ class _SavedArticlePageState extends State<SavedArticlesPage> with RouteAware {
                     article: data[index],
                     onSavedPressed: (article) {
                       data.remove(article);
-                      ArticleController.updateArticleSaved(article, false);
+                      ArticleController.updateArticleSaved(
+                          context, article, false, true);
                       unsavedArticles.add(article.articleId!);
                       setState(() {});
                     },

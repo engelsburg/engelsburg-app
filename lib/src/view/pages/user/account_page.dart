@@ -28,7 +28,7 @@ class _AccountPageState extends State<AccountPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
+        child: ListView(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8),

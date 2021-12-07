@@ -257,8 +257,9 @@ class _ExtendedSubstituteCardState extends State<ExtendedSubstituteCard> {
               widget.substitute.substituteOf!,
           textScaleFactor: 1.5,
         ),
-      if (widget.substitute.text != null) const SizedBox(height: 10),
-      if (widget.substitute.text != null)
+      if (widget.substitute.text != null && widget.substitute.text!.isNotEmpty)
+        const SizedBox(height: 10),
+      if (widget.substitute.text != null && widget.substitute.text!.isNotEmpty)
         Text(
           AppLocalizations.of(context)!.furtherInformation +
               ': ' +

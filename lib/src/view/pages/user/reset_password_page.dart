@@ -23,6 +23,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   bool _requested = false;
 
   @override
+  void initState() {
+    super.initState();
+    _codeController.text = widget.code;
+  }
+
+  @override
   Widget build(BuildContext context) {
     AuthModel auth = Provider.of<AuthModel>(context);
     if (!_requested) {
@@ -30,9 +36,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       _codeController.clear();
     }
 
-    _codeController.text = widget.code;
-
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.resetPassword),
       ),

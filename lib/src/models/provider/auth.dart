@@ -30,4 +30,8 @@ class AuthModel extends ChangeNotifier {
     await _prefs.remove('email');
     notifyListeners();
   }
+
+  Future<void> removeAccessToken() async {
+    await _prefs.remove('access_token');
+  }
 }

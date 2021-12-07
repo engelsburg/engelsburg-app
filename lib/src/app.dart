@@ -1,4 +1,5 @@
 import 'package:engelsburg_app/src/models/provider/theme.dart';
+import 'package:engelsburg_app/src/utils/global_context.dart';
 import 'package:engelsburg_app/src/view/pages/home/grades_page.dart';
 import 'package:engelsburg_app/src/view/pages/home/home_page.dart';
 import 'package:engelsburg_app/src/view/pages/home/news_page.dart';
@@ -32,6 +33,7 @@ class EngelsburgApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
     return MaterialApp(
+      navigatorKey: GlobalContext.key,
       builder: (context, child) =>
           ScrollConfiguration(behavior: NoOverscrollEffect(), child: child!),
       debugShowCheckedModeBanner: false,

@@ -7,6 +7,7 @@ import 'package:engelsburg_app/src/models/api/dto/sign_up_request_dto.dart';
 import 'package:engelsburg_app/src/models/provider/auth.dart';
 import 'package:engelsburg_app/src/models/result.dart';
 import 'package:engelsburg_app/src/utils/constants/api_constants.dart';
+import 'package:engelsburg_app/src/utils/global_context.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +18,18 @@ import 'db_service.dart';
 import 'shared_prefs.dart';
 
 class ApiService {
+  static Future<void>? _authFuture;
+
+  static void show(BuildContext context, String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  static void requestRelogin(BuildContext context, AuthModel auth) {
+    show(context, AppLocalizations.of(context)!.unexpectedErrorMessage);
+    auth.clear();
+    Navigator.pushNamed(context, "/");
+  }
+
   static Future<Result> request(BuildContext context,
       {required Uri uri,
       required HttpMethod method,
@@ -60,7 +73,11 @@ class ApiService {
             res.body.isEmpty ? Result.empty() : Result.of(jsonDecode(res.body));
       }
 
-      if (result.resultPresent()) print("SUCCESS: " + uri.toString());
+      print((result.errorPresent() ? "FAILED" : "SUCCESS") +
+          ": " +
+          method.toString().split(".")[1].toUpperCase() +
+          " " +
+          uri.toString());
       result.error?.log();
 
       //If access token is expired
@@ -68,8 +85,15 @@ class ApiService {
       if (result.errorPresent() &&
           result.error!.isExpiredAccessToken &&
           auth.isLoggedIn) {
-        print("RefreshToken: " + (auth.refreshToken ?? ""));
-        refreshJWT(context, auth);
+        if (_authFuture != null) {
+          await _authFuture;
+        } else if (auth.accessToken != null) {
+          auth.removeAccessToken();
+          _authFuture = refreshJWT(context, auth);
+          await _authFuture;
+          _authFuture == null;
+        }
+
         if (headers != null && auth.isLoggedIn) {
           headers.update('Authorization', (value) => auth.accessToken!);
         }
@@ -120,19 +144,26 @@ class ApiService {
     return result;
   }
 
-  static void requestRelogin(BuildContext context, AuthModel auth) {
-    show(context, AppLocalizations.of(context)!.unexpectedErrorMessage);
-    auth.clear();
-    Navigator.pushNamed(context, "/");
+  static Map<String, String> authenticatedEngelsburgApiHeaders(
+      BuildContext context) {
+    AuthModel auth = context.read<AuthModel>();
+    if (!auth.isLoggedIn) {
+      return ApiConstants.unauthenticatedEngelsburgApiHeaders;
+    }
+
+    return {
+      "Authorization": auth.accessToken!,
+      ...ApiConstants.unauthenticatedEngelsburgApiHeaders
+    };
   }
 
-  static void refreshJWT(BuildContext context, AuthModel auth) async {
+  static Future<void> refreshJWT(BuildContext context, AuthModel auth) async {
     final refreshTokenUri = Uri.parse(
       ApiConstants.engelsburgApiRefreshUrl +
           "?refreshToken=" +
           auth.refreshToken!,
     );
-    (await request(context, uri: refreshTokenUri, method: HttpMethod.get))
+    await (await request(context, uri: refreshTokenUri, method: HttpMethod.get))
         .handle<AuthInfoDTO>(
       context,
       parse: (json) => AuthInfoDTO.fromJson(json),
@@ -148,24 +179,6 @@ class ApiService {
     );
   }
 
-  static void show(BuildContext context, String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }
-
-  static Map<String, String> authenticatedEngelsburgApiHeaders(
-      BuildContext context) {
-    AuthModel auth = context.read<AuthModel>();
-    if (!auth.isLoggedIn) {
-      return ApiConstants.unauthenticatedEngelsburgApiHeaders;
-    }
-    print("AccessToken: " + auth.accessToken!);
-
-    return {
-      "Authorization": auth.accessToken!,
-      ...ApiConstants.unauthenticatedEngelsburgApiHeaders
-    };
-  }
-
   static Future<Result> getArticles(BuildContext context, Paging paging) async {
     final uri = Uri.parse(
         ApiConstants.engelsburgApiArticlesUrl + Query.paging(paging).get());
@@ -173,7 +186,7 @@ class ApiService {
       context,
       uri: uri,
       method: HttpMethod.get,
-      cacheKey: 'articles_json',
+      cacheKey: 'articles_' + paging.page.toString() + '_json',
       headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
     );
   }
@@ -373,6 +386,17 @@ class ApiService {
       body: dto,
       method: HttpMethod.patch,
       headers: ApiConstants.unauthenticatedEngelsburgApiHeaders,
+    );
+  }
+
+  static Future<Result> saveArticle(int articleId, bool saved) async {
+    final uri = Uri.parse(
+        ApiConstants.engelsburgApiSaveArticlesUrl + "/" + articleId.toString());
+    return await request(
+      GlobalContext.get,
+      uri: uri,
+      method: saved ? HttpMethod.patch : HttpMethod.delete,
+      headers: authenticatedEngelsburgApiHeaders(GlobalContext.get),
     );
   }
 }

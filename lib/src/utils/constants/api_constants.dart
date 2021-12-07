@@ -7,6 +7,8 @@ class ApiConstants {
   static const engelsburgApiBaseUrl = 'http://10.0.2.2:8080';
   static const engelsburgApiEventsUrl = engelsburgApiBaseUrl + '/event';
   static const engelsburgApiArticlesUrl = engelsburgApiBaseUrl + '/article';
+  static const engelsburgApiSaveArticlesUrl =
+      engelsburgApiArticlesUrl + '/save';
   static const engelsburgApiCafeteriaUrl = engelsburgApiBaseUrl + '/cafeteria';
   static const engelsburgApiSolarSystemUrl =
       engelsburgApiBaseUrl + '/solar_system';
@@ -17,8 +19,8 @@ class ApiConstants {
   static const engelsburgApiSubstitutesUrl =
       engelsburgApiBaseUrl + "/substitute";
   static const engelsburgApiUserDataUrl = engelsburgApiBaseUrl + '/user/data';
-  static const engelsburgApiSignInUrl = engelsburgApiBaseUrl + '/auth/login';
 
+  static const engelsburgApiSignInUrl = engelsburgApiBaseUrl + '/auth/login';
   static const engelsburgApiOAuthLoginUrl =
       engelsburgApiBaseUrl + "/auth/oauth";
   static const engelsburgApiOAuthGoogleLoginUrl =

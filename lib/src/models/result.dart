@@ -33,10 +33,10 @@ class Result {
 
   static keepJson(Map<String, dynamic> json) => json;
 
-  void handle<T>(BuildContext context,
+  Future<void> handle<T>(BuildContext context,
       {T Function(Map<String, dynamic>)? parse,
-      void Function(T?)? onSuccess,
-      void Function(ApiError)? onError}) {
+      Future<void>? Function(T?)? onSuccess,
+      Future<void>? Function(ApiError)? onError}) async {
     if (errorPresent() && onError != null) {
       //If error occurred
       onError(error!);
@@ -44,10 +44,10 @@ class Result {
     } else if (onSuccess != null) {
       if (resultPresent() && parse != null) {
         //If result present and valid parse function specified
-        onSuccess(parse(result!));
+        await onSuccess(parse(result!));
       } else {
         //Empty result or no parse function
-        onSuccess(null);
+        await onSuccess(null);
       }
     }
   }
